@@ -116,14 +116,141 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ---- Motion tokens (transition & animation library) ---- */
+:root {
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-inout-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer components {
+  /* Scroll-triggered section entrance (2.1 standard appear / 2.3 scale-in).
+     Hidden by default; .is-inview applies the final state via transition. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.5s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal-scale {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+    transition:
+      opacity 0.4s var(--ease-spring),
+      transform 0.4s var(--ease-spring);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-inview,
+  .reveal-scale.is-inview {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 3.3 Underline draw — asymmetric scaleX reveal */
+  .u-draw {
+    position: relative;
+  }
+  .u-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s var(--ease-standard);
+  }
+  .u-draw:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* 3.4 Image zoom-crop on hover */
+  .img-zoom {
+    transform: scale(1);
+    transition: transform 0.4s var(--ease-out);
+  }
+  .group:hover .img-zoom {
+    transform: scale(1.05);
+  }
+
+  /* 3.5 Text mask reveal — lines wipe up through a clipping mask (hero only) */
+  .mask-line {
+    display: inline-block;
+    transform: translateY(115%);
+    opacity: 0;
+    animation: mask-reveal 0.9s var(--ease-out) forwards;
+    animation-delay: var(--mask-delay, 0ms);
+    will-change: transform, opacity;
+  }
+  @keyframes mask-reveal {
+    from {
+      transform: translateY(115%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Respect prefers-reduced-motion: plain opacity fade, no transforms. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-scale {
+    opacity: 0;
+    transform: none;
+    transition: opacity 0.3s ease;
+  }
+  .reveal.is-inview,
+  .reveal-scale.is-inview {
+    opacity: 1;
+  }
+  .img-zoom,
+  .group:hover .img-zoom {
+    transform: none;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
-  body {
-    @apply bg-background text-foreground;
-    }
+  }
   html {
-    @apply font-sans;
-    }
+    @apply font-sans scroll-smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground font-normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1 {
+    font-weight: 600 !important;
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    font-weight: 600 !important;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-weight: 600 !important;
+    letter-spacing: -0.01em;
+  }
+  h4, h5, h6 {
+    font-weight: 600 !important;
+  }
 }

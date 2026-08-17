@@ -27,10 +27,29 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.lighthouseci/
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files — NEVER commit secrets
+.env
+.env.*
+!.env.example
+
+# prisma generated client
+/lib/generated/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# vercel
+.vercel
+
+# turbo
+.turbo
+
+# agent / editor scratch
+.agents/
+.claude/
+*.local
+.idea/
+.vscode/

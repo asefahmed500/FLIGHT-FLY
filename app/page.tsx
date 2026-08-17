@@ -1,19 +1,56 @@
-import { Button } from "@/components/ui/button"
+"use client"
 
-export default function Page() {
+import { Navbar } from "@/components/navbar"
+import { HeroSearch } from "@/components/hero-search"
+import { PromoBanner } from "@/components/promo-banner"
+import { InterstitialBanner } from "@/components/interstitial-banner"
+import { CategoryCards } from "@/components/category-cards"
+import { FeaturedDestinations } from "@/components/featured-destinations"
+import { PopularDeals } from "@/components/popular-deals"
+import { WhyChooseUs } from "@/components/why-choose-us"
+import { TrendingTours } from "@/components/trending-tours"
+import { Testimonials } from "@/components/testimonials"
+import { AppNewsletter } from "@/components/app-newsletter"
+import { Footer } from "@/components/footer"
+import { VisaServices } from "@/components/visa-services"
+import { TicketsExperiences } from "@/components/tickets-experiences"
+import { ScrollytellingSection } from "@/components/scrollytelling"
+import { TrustedBy } from "@/components/trusted-by"
+import { useBookingStore } from "@/lib/stores/booking-store"
+import type { BookingItemType } from "@/lib/types"
+
+export default function Home() {
+  const handleBookItem = (item: {
+    title: string
+    price: string
+    subtitle?: string
+    rating?: number
+    type?: BookingItemType
+  }) => {
+    useBookingStore.getState().openBooking(item)
+  }
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
+    <main className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans selection:bg-[#1E40AF] selection:text-white">
+      <Navbar />
+
+      <HeroSearch onSearchSubmit={handleBookItem} />
+      <PromoBanner />
+      <CategoryCards />
+      <TrustedBy />
+      <InterstitialBanner variant="app" />
+      <FeaturedDestinations onBookItem={handleBookItem} />
+      <PopularDeals onBookItem={handleBookItem} />
+      <InterstitialBanner variant="flash" />
+      <VisaServices onBookItem={handleBookItem} />
+      <TicketsExperiences onBookItem={handleBookItem} />
+      <InterstitialBanner variant="vip" />
+      <ScrollytellingSection />
+      <WhyChooseUs />
+      <TrendingTours onBookItem={handleBookItem} />
+      <Testimonials />
+      <AppNewsletter />
+      <Footer />
+    </main>
   )
 }

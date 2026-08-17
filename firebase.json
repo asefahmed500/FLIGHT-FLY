@@ -1,0 +1,27 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "auth": {
+    "email": true,
+    "anonymous": false,
+    "passwordPolicy": {
+      "minimumLength": 6,
+      "requireLowercase": false,
+      "requireUppercase": false,
+      "requireNumeric": false,
+      "requireSymbol": false
+    },
+    "allowPasswordSignup": true,
+    "providers": [
+      "password",
+      "google.com"
+    ],
+    "authorizedDomains": [
+      "localhost",
+      "127.0.0.1",
+      "real-estate-ea5a9.firebaseapp.com",
+      "real-estate-ea5a9.web.app"
+    ]
+  }
+}

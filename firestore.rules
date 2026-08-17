@@ -1,0 +1,37 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Helpers ----
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    // Mirrors the NEXT_PUBLIC_ADMIN_EMAILS allowlist in lib/config.ts.
+    // User roles now live in PostgreSQL (Prisma). Firestore only guards the
+    // live landing content, so admin writes are gated by the email allowlist.
+    function isAdminEmail(email) {
+      return email in ['asefahmed500@gmail.com', 'admin@flightfly.com'];
+    }
+    function isAdminEmailUser() {
+      return isAuthenticated() && isAdminEmail(request.auth.token.email);
+    }
+
+    // ---- deals/{id} (public read, admin write) ----
+    match /deals/{dealId} {
+      allow read: if true;
+      allow create, update, delete: if isAdminEmailUser();
+    }
+
+    // ---- catalog/{id} (live landing content; public read, admin write) ----
+    match /catalog/{catalogId} {
+      allow read: if true;
+      allow create, update, delete: if isAdminEmailUser();
+    }
+
+    // ---- default deny ----
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
