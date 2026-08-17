@@ -3,9 +3,9 @@
 //
 // Usage: node scripts/check-bookings.mjs
 
-const API_KEY =
-  process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
-  "AIzaSyC6XzcshtQnNXx70NQugX4vBh2PAnS2ZZA"
+import { requireEnv } from "./env.mjs"
+
+const API_KEY = requireEnv("NEXT_PUBLIC_FIREBASE_API_KEY")
 const EMAIL = "admin@flightfly.com"
 const PASSWORD = "Admin@12345"
 const BASE = process.env.BASE_URL || "http://localhost:3000"

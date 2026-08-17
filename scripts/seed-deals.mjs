@@ -8,10 +8,10 @@
 //   node scripts/seed-deals.mjs
 //   SEED_ADMIN_EMAIL=admin@flightfly.com SEED_ADMIN_PASSWORD='...' node scripts/seed-deals.mjs
 
-const API_KEY =
-  process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
-  "AIzaSyC6XzcshtQnNXx70NQugX4vBh2PAnS2ZZA"
-const PROJECT = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "real-estate-ea5a9"
+import { requireEnv } from "./env.mjs"
+
+const API_KEY = requireEnv("NEXT_PUBLIC_FIREBASE_API_KEY")
+const PROJECT = requireEnv("NEXT_PUBLIC_FIREBASE_PROJECT_ID")
 const EMAIL = process.env.SEED_ADMIN_EMAIL || "admin@flightfly.com"
 const PASSWORD = process.env.SEED_ADMIN_PASSWORD || "Admin@12345"
 
