@@ -85,8 +85,20 @@ export function useMyBookings(user: User | null | undefined) {
 
 export function useAllBookings(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { data, loading } = useAppFetch<Booking[]>(user, user ? "/api/bookings" : null, refreshKey)
-  return { bookings: data ?? [], loading, refresh: () => setRefreshKey((k) => k + 1) }
+  const [page, setPage] = useState(1)
+  const { data, loading } = useAppFetch<{ items: Booking[]; total: number }>(
+    user,
+    user ? `/api/bookings?page=${page}&take=25` : null,
+    refreshKey
+  )
+  return {
+    bookings: data?.items ?? [],
+    total: data?.total ?? 0,
+    page,
+    setPage,
+    loading,
+    refresh: () => setRefreshKey((k) => k + 1),
+  }
 }
 
 export function useUsers(user: User | null | undefined) {
@@ -103,12 +115,14 @@ export function useMyFavorites(user: User | null | undefined) {
 
 export function useNotifications(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { data, loading } = useAppFetch<AppNotification[]>(user, user ? "/api/notifications" : null, refreshKey)
-  const notifications = data ?? []
-  const unreadCount = notifications.filter((n) => !n.read).length
+  const { data, loading } = useAppFetch<{ items: AppNotification[]; unreadCount: number }>(
+    user,
+    user ? "/api/notifications" : null,
+    refreshKey
+  )
   return {
-    notifications,
-    unreadCount,
+    notifications: data?.items ?? [],
+    unreadCount: data?.unreadCount ?? 0,
     loading,
     refresh: () => setRefreshKey((k) => k + 1),
   }
@@ -129,9 +143,9 @@ export async function createBooking(
     passengerName: string
     email: string
     phone: string
+    itemId?: string
     itemTitle: string
     itemType: string
-    price: string
     cabinClass: string
     paymentType: "card" | "invoice"
     travelDate: string
@@ -139,12 +153,21 @@ export async function createBooking(
     nationality: string
     passportNumber?: string
     specialRequests?: string
+    promoCode?: string
   }
 ) {
-  return api<{ id: string; refId: string }>("/api/bookings", user, {
+  return api<{ id: string; refId: string; finalPrice: string }>("/api/bookings", user, {
     method: "POST",
     body: JSON.stringify(payload),
   })
+}
+
+export async function validatePromoCode(user: User, code: string) {
+  return api<{ valid: boolean; code?: string; percentOff?: number; error?: string }>(
+    "/api/promos",
+    user,
+    { method: "POST", body: JSON.stringify({ validate: code }) }
+  )
 }
 
 export async function setBookingStatus(user: User, id: string, status: BookingStatus) {
@@ -169,6 +192,19 @@ export async function updateUserRole(user: User, uid: string, role: UserRole) {
   return api<{ user: AppUser }>(`/api/users/${uid}`, user, {
     method: "PATCH",
     body: JSON.stringify({ role }),
+  })
+}
+
+export async function updateMyProfile(user: User, displayName: string) {
+  return api<{ user: AppUser }>("/api/users/me", user, {
+    method: "PATCH",
+    body: JSON.stringify({ displayName }),
+  })
+}
+
+export async function removeFavorite(user: User, dealId: string) {
+  return api<{ ok: true }>(`/api/favorites?dealId=${encodeURIComponent(dealId)}`, user, {
+    method: "DELETE",
   })
 }
 

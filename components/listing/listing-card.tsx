@@ -33,7 +33,7 @@ export function ListingCard({ data, ctaLabel = "Book Now" }: ListingCardProps) {
   const openBooking = useBookingStore((s) => s.openBooking)
 
   return (
-    <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl">
+    <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-xl">
       <div className="relative h-52 overflow-hidden">
         <img
           src={data.image}
@@ -41,7 +41,7 @@ export function ListingCard({ data, ctaLabel = "Book Now" }: ListingCardProps) {
           className="img-zoom h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-        <Badge className="absolute left-4 top-4 bg-[#0F172A] font-semibold text-xs text-white shadow-md">
+        <Badge className="absolute left-4 top-4 bg-[#111111] font-semibold text-xs text-white shadow-md">
           {data.badge}
         </Badge>
         {data.deal && <DealChip className="absolute right-4 top-4" />}
@@ -49,14 +49,14 @@ export function ListingCard({ data, ctaLabel = "Book Now" }: ListingCardProps) {
 
       <CardContent className="flex flex-1 flex-col justify-between p-5">
         <Link href={data.detailHref} className="block">
-          <h3 className="text-base font-semibold leading-snug tracking-[-0.01em] text-[#0F172A] transition-colors group-hover:text-[#1E40AF] line-clamp-1">
+          <h3 className="text-base font-semibold leading-snug tracking-[-0.01em] text-[#111111] transition-colors group-hover:text-[#4F46E5] line-clamp-1">
             {data.title}
           </h3>
         </Link>
 
         <div className="mt-3 border-t border-slate-100 pt-3">
           <div className="mb-3 flex items-baseline gap-2">
-            <span className="text-lg font-semibold text-[#1E40AF]">
+            <span className="text-lg font-semibold text-[#4F46E5]">
               {data.price}
             </span>
             {data.originalPrice && (
@@ -68,6 +68,7 @@ export function ListingCard({ data, ctaLabel = "Book Now" }: ListingCardProps) {
             actionLabel={ctaLabel}
             onAction={() =>
               openBooking({
+                itemId: data.id,
                 title: data.title,
                 subtitle: data.subtitle,
                 price: data.price,

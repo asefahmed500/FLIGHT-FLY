@@ -7,6 +7,7 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile as firebaseUpdateProfile,
   signOut as firebaseSignOut,
   sendPasswordResetEmail,
 } from "firebase/auth"
@@ -36,6 +37,7 @@ interface AuthContextType {
   signUpWithEmail: (email: string, pass: string, name: string) => Promise<void>
   resetPassword: (email: string) => Promise<void>
   updateUserRole: (uid: string, role: UserRole) => Promise<void>
+  refreshProfile: () => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -115,7 +117,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUpWithEmail = async (email: string, pass: string, name: string) => {
     const res = await createUserWithEmailAndPassword(auth, email, pass)
     if (res.user) {
+      // Persist the chosen display name on the Auth user before syncing,
+      // so the Postgres row is created with the real name.
+      if (name.trim()) {
+        await firebaseUpdateProfile(res.user, { displayName: name.trim() }).catch(() => {})
+      }
       await syncUserProfile(res.user)
+    }
+  }
+
+  const refreshProfile = async () => {
+    if (user) {
+      await syncUserProfile(user)
     }
   }
 
@@ -159,6 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signUpWithEmail,
         resetPassword,
         updateUserRole,
+        refreshProfile,
         logout,
       }}
     >

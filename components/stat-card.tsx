@@ -16,7 +16,7 @@ export function StatCard({ label, value, loading, hint, icon, iconClassName, cla
   return (
     <Card
       className={cn(
-        "rounded-xl border-slate-200/80 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1E40AF]/30 hover:shadow-lg hover:shadow-slate-900/5",
+        "rounded-xl border-slate-200/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#4F46E5]/30 hover:shadow-lg hover:shadow-slate-900/5",
         className
       )}
     >

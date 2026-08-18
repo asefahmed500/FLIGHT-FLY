@@ -57,7 +57,7 @@ export default function DealDetailPage() {
       <PageFrame>
         <div className="flex flex-col items-center gap-4 py-24 text-center">
           <p className="text-5xl">🔥</p>
-          <h1 className="text-2xl font-semibold text-[#0F172A]">This deal has ended</h1>
+          <h1 className="text-2xl font-semibold text-[#111111]">This deal has ended</h1>
           <p className="text-sm text-slate-500">It either expired or sold out. Check out this week&apos;s fresh deals instead.</p>
           <Button render={<Link href="/deals" />} className="mt-2 bg-amber-500 hover:bg-amber-600">
             View All Deals
@@ -98,9 +98,9 @@ export default function DealDetailPage() {
       <div className="flex flex-col gap-10">
         {/* Breadcrumb */}
         <nav className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500">
-          <Link href="/" className="hover:text-[#1E40AF]">Home</Link>
+          <Link href="/" className="hover:text-[#4F46E5]">Home</Link>
           <ChevronRight className="h-3 w-3 text-slate-400" />
-          <Link href="/deals" className="hover:text-[#1E40AF]">Deals</Link>
+          <Link href="/deals" className="hover:text-[#4F46E5]">Deals</Link>
           <ChevronRight className="h-3 w-3 text-slate-400" />
           <span className="max-w-[40ch] truncate text-slate-900">{deal.title}</span>
         </nav>
@@ -120,7 +120,7 @@ export default function DealDetailPage() {
             <div className="rounded-3xl border border-slate-200/80 bg-white p-7 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-semibold tracking-[-0.01em] text-[#0F172A] sm:text-3xl">{deal.title}</h1>
+                  <h1 className="text-2xl font-semibold tracking-[-0.01em] text-[#111111] sm:text-3xl">{deal.title}</h1>
                   <p className="mt-1 text-sm font-medium text-slate-500">{deal.subtitle}</p>
                 </div>
                 <div className="flex items-center gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-600">
@@ -137,7 +137,7 @@ export default function DealDetailPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
-                  <CalendarCheck className="h-4 w-4 text-[#1E40AF]" />
+                  <CalendarCheck className="h-4 w-4 text-[#4F46E5]" />
                   <div>
                     <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Confirmation</p>
                     <p className="text-sm font-semibold text-slate-800">Instant, usually 2 min</p>
@@ -187,6 +187,7 @@ export default function DealDetailPage() {
               <Button
                 onClick={() =>
                   openBooking({
+                    itemId: deal.id,
                     title: deal.title,
                     subtitle: deal.subtitle,
                     price: deal.discountPrice,
@@ -202,10 +203,10 @@ export default function DealDetailPage() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => pushToast({ variant: "info", title: "Price locked", description: "We've emailed this price to you. It's valid until the offer expires." })}
+                onClick={() => pushToast({ variant: "info", title: "Added to your watchlist", description: "Track this deal from your dashboard — the offer page always shows the live price." })}
                 className="mt-2 h-11 w-full border-amber-300 bg-white text-sm font-medium text-[#B45309] hover:bg-amber-100"
               >
-                Lock this price by email
+                Save this deal
               </Button>
 
               <div className="mt-5 space-y-3 border-t border-amber-100 pt-5">
@@ -226,7 +227,7 @@ export default function DealDetailPage() {
             <div className="mb-5 flex items-end justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-amber-500">More hot deals</p>
-                <h2 className="mt-1 text-xl font-semibold text-[#0F172A]">You might also love</h2>
+                <h2 className="mt-1 text-xl font-semibold text-[#111111]">You might also love</h2>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

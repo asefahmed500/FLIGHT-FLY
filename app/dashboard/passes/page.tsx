@@ -21,7 +21,7 @@ function PassCard({ pass, email }: { pass: Booking; email?: string | null }) {
   useEffect(() => {
     let active = true
     QRCode.toDataURL(
-      JSON.stringify({ ref: pass.refId, item: pass.passengerName, guest: pass.passengerName, status: pass.status }),
+      JSON.stringify({ ref: pass.refId, item: pass.itemTitle, guest: pass.passengerName, status: pass.status }),
       { margin: 1, width: 240 }
     )
       .then((url) => {
@@ -41,7 +41,7 @@ function PassCard({ pass, email }: { pass: Booking; email?: string | null }) {
   ]
 
   return (
-    <Card className="relative overflow-hidden rounded-xl border-slate-800 bg-[#0F172A] text-white p-0">
+    <Card className="relative overflow-hidden rounded-xl border-slate-800 bg-[#111111] text-white p-0">
       {/* Amber edge accent */}
       <div className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-amber-400 to-[#D97706]" />
 

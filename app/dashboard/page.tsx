@@ -59,7 +59,7 @@ export default function DashboardOverviewPage() {
           loading={loading}
           hint={<span className="text-muted-foreground font-medium">Upcoming & in-progress</span>}
           icon={<Plane className="size-5" />}
-          iconClassName="bg-[#1E40AF]/10 text-[#1E40AF]"
+          iconClassName="bg-[#4F46E5]/10 text-[#4F46E5]"
         />
         <StatCard
           label="Firebase Account"

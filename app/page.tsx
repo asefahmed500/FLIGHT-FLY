@@ -17,24 +17,18 @@ import { TicketsExperiences } from "@/components/tickets-experiences"
 import { ScrollytellingSection } from "@/components/scrollytelling"
 import { TrustedBy } from "@/components/trusted-by"
 import { useBookingStore } from "@/lib/stores/booking-store"
-import type { BookingItemType } from "@/lib/types"
+import type { BookingItemInfo } from "@/lib/stores/booking-store"
 
 export default function Home() {
-  const handleBookItem = (item: {
-    title: string
-    price: string
-    subtitle?: string
-    rating?: number
-    type?: BookingItemType
-  }) => {
+  const handleBookItem = (item: BookingItemInfo) => {
     useBookingStore.getState().openBooking(item)
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans selection:bg-[#1E40AF] selection:text-white">
+    <main className="min-h-screen bg-[#FAFAFA] flex flex-col font-sans selection:bg-[#4F46E5] selection:text-white">
       <Navbar />
 
-      <HeroSearch onSearchSubmit={handleBookItem} />
+      <HeroSearch />
       <PromoBanner />
       <CategoryCards />
       <TrustedBy />

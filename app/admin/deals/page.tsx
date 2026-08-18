@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useDeals, createDeal, deleteDeal } from "@/lib/firestore-data"
+import { useDeals, createDeal, updateDeal, deleteDeal } from "@/lib/firestore-data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -10,8 +10,8 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input"
 import { NativeSelect } from "@/components/ui/native-select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Trash2, Tag } from "lucide-react"
-import type { DealCategory } from "@/lib/types"
+import { Plus, Trash2, Tag, Pencil, X } from "lucide-react"
+import type { Deal, DealCategory } from "@/lib/types"
 
 const CATEGORIES: DealCategory[] = ["flights", "hotels", "packages", "tours", "visa", "tickets"]
 
@@ -27,14 +27,42 @@ const emptyForm = {
   image: "",
 }
 
+function toForm(deal: Deal): typeof emptyForm {
+  return {
+    title: deal.title ?? "",
+    subtitle: deal.subtitle ?? "",
+    category: deal.category ?? "flights",
+    originalPrice: deal.originalPrice ?? "",
+    discountPrice: deal.discountPrice ?? "",
+    badge: deal.badge ?? "",
+    rating: deal.rating != null ? String(deal.rating) : "5.0",
+    expires: deal.expires ?? "",
+    image: deal.image ?? "",
+  }
+}
+
 export default function AdminDealsPage() {
   const { deals, loading } = useDeals()
   const [form, setForm] = useState(emptyForm)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [error, setError] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
   const set = (key: keyof typeof emptyForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }))
+
+  const startEdit = (deal: Deal) => {
+    setEditingId(deal.id)
+    setError("")
+    setForm(toForm(deal))
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
+    setForm(emptyForm)
+    setError("")
+  }
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,22 +71,28 @@ export default function AdminDealsPage() {
       setError("Title and discounted price are required.")
       return
     }
+    const payload = {
+      title: form.title.trim(),
+      subtitle: form.subtitle.trim(),
+      category: form.category,
+      originalPrice: form.originalPrice.trim() || form.discountPrice.trim(),
+      discountPrice: form.discountPrice.trim(),
+      badge: form.badge.trim() || "NEW DEAL",
+      rating: Math.min(5, Math.max(1, Number(form.rating) || 5)),
+      expires: form.expires.trim() || "Limited Capacity",
+      image: form.image.trim(),
+    }
     setSubmitting(true)
     try {
-      await createDeal({
-        title: form.title.trim(),
-        subtitle: form.subtitle.trim(),
-        category: form.category,
-        originalPrice: form.originalPrice.trim() || form.discountPrice.trim(),
-        discountPrice: form.discountPrice.trim(),
-        badge: form.badge.trim() || "NEW DEAL",
-        rating: Math.min(5, Math.max(1, Number(form.rating) || 5)),
-        expires: form.expires.trim() || "Limited Capacity",
-        image: form.image.trim(),
-      })
+      if (editingId) {
+        await updateDeal(editingId, payload)
+      } else {
+        await createDeal(payload)
+      }
       setForm(emptyForm)
+      setEditingId(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create deal.")
+      setError(err instanceof Error ? err.message : "Failed to save deal.")
     } finally {
       setSubmitting(false)
     }
@@ -73,8 +107,22 @@ export default function AdminDealsPage() {
 
       <Card className="rounded-xl">
         <CardHeader>
-          <CardTitle>Create New Deal</CardTitle>
-          <CardDescription>Published to Firestore; appears instantly on the landing page.</CardDescription>
+          <CardTitle className="flex items-center gap-2">
+            {editingId ? (
+              <>
+                <Pencil className="size-4 text-amber-500" /> Edit Deal
+              </>
+            ) : (
+              <>
+                <Plus className="size-4 text-[#4F46E5]" /> Create New Deal
+              </>
+            )}
+          </CardTitle>
+          <CardDescription>
+            {editingId
+              ? "Changes publish to Firestore and appear on the landing page instantly."
+              : "Published to Firestore; appears instantly on the landing page."}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={submit} className="flex flex-col gap-4">
@@ -126,9 +174,17 @@ export default function AdminDealsPage() {
                 <FieldDescription>Optional; leave blank to use the section default.</FieldDescription>
               </Field>
             </FieldGroup>
-            <Button type="submit" disabled={submitting} className="self-start">
-              <Plus className="size-4" data-icon="inline-start" /> {submitting ? "Publishing…" : "Publish Deal"}
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button type="submit" disabled={submitting}>
+                {editingId ? <Pencil className="size-4" data-icon="inline-start" /> : <Plus className="size-4" data-icon="inline-start" />}
+                {submitting ? "Saving…" : editingId ? "Save Changes" : "Publish Deal"}
+              </Button>
+              {editingId && (
+                <Button type="button" variant="ghost" onClick={cancelEdit}>
+                  <X className="size-4" data-icon="inline-start" /> Cancel
+                </Button>
+              )}
+            </div>
           </form>
         </CardContent>
       </Card>
@@ -177,22 +233,32 @@ export default function AdminDealsPage() {
                     <TableCell className="text-right font-semibold text-emerald-600">{deal.discountPrice}</TableCell>
                     <TableCell className="text-xs text-muted-foreground">{deal.expires}</TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        size="icon-sm"
-                        variant="ghost"
-                        aria-label={`Delete ${deal.title}`}
-                        onClick={async () => {
-                          if (!window.confirm(`Delete "${deal.title}"?`)) return
-                          try {
-                            await deleteDeal(deal.id)
-                          } catch (err) {
-                            setError(err instanceof Error ? err.message : "Failed to delete deal.")
-                          }
-                        }}
-                        className="text-muted-foreground hover:text-destructive"
-                      >
-                        <Trash2 />
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          aria-label={`Edit ${deal.title}`}
+                          onClick={() => startEdit(deal)}
+                        >
+                          <Pencil />
+                        </Button>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          aria-label={`Delete ${deal.title}`}
+                          onClick={async () => {
+                            if (!window.confirm(`Delete "${deal.title}"?`)) return
+                            try {
+                              await deleteDeal(deal.id)
+                            } catch (err) {
+                              setError(err instanceof Error ? err.message : "Failed to delete deal.")
+                            }
+                          }}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

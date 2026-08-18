@@ -108,11 +108,11 @@ export function TrustedBy() {
                   role="img"
                 >
                   {/* Grey at rest, cross-faded (not filtered) to brand colour on hover */}
-                  <g opacity="1" className="transition-opacity duration-300 group-hover:opacity-0">
+                  <g opacity="1" className="transition-opacity duration-200 group-hover:opacity-0">
                     {partner.svg("#94A3B8")}
                   </g>
-                  <g opacity="0" className="transition-opacity duration-300 group-hover:opacity-100">
-                    {partner.svg("#0F172A")}
+                  <g opacity="0" className="transition-opacity duration-200 group-hover:opacity-100">
+                    {partner.svg("#111111")}
                   </g>
                 </svg>
               </div>

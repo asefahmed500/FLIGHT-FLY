@@ -52,7 +52,7 @@ export default function AdminSecurityPage() {
         </p>
       </div>
 
-      <Card className="overflow-hidden rounded-2xl bg-[#0F172A] text-white">
+      <Card className="overflow-hidden rounded-2xl bg-[#111111] text-white">
         <CardHeader>
           <CardTitle className="text-amber-400">{"// Active firestore.rules"}</CardTitle>
           <CardDescription className="text-slate-400">Deployed to project real-estate-ea5a9</CardDescription>

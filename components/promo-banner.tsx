@@ -41,7 +41,7 @@ export function PromoBanner() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-[#0F172A] via-[#1E40AF] to-[#0F172A] text-white py-4 px-4 sm:px-6 lg:px-8 border-y border-amber-500/30 shadow-lg relative overflow-hidden">
+    <div className="bg-gradient-to-r from-[#111111] via-[#4F46E5] to-[#111111] text-white py-4 px-4 sm:px-6 lg:px-8 border-y border-amber-500/30 shadow-lg relative overflow-hidden">
       
       {/* Decorative background glow */}
       <div className="absolute top-0 right-1/4 w-64 h-full bg-amber-500/10 blur-xl pointer-events-none" />

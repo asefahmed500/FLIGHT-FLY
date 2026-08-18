@@ -62,6 +62,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     return NextResponse.json({ error: "Admin access required." }, { status: 403 })
   }
 
-  await db.booking.delete({ where: { id } })
+  const existing = await db.booking.findUnique({ where: { id }, select: { id: true, refId: true } })
+  if (!existing) return NextResponse.json({ error: "Booking not found." }, { status: 404 })
+
+  await db.booking.delete({ where: { id } }).catch(() => {})
   return NextResponse.json({ ok: true })
 }

@@ -19,16 +19,17 @@ export async function GET(req: Request) {
     where: { userId: identity.uid, read: false },
   })
 
-  return NextResponse.json(
-    rows.map((n) => ({
+  return NextResponse.json({
+    items: rows.map((n) => ({
       id: n.id,
       userId: n.userId,
       title: n.title,
       body: n.body,
       read: n.read,
       createdAt: n.createdAt.toISOString(),
-    }))
-  )
+    })),
+    unreadCount: unread,
+  })
 }
 
 export async function PATCH(req: Request) {

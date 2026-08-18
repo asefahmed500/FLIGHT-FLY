@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { label: "Flights", href: "/flights" },
   { label: "Hotels", href: "/hotels" },
   { label: "Tours", href: "/tours" },
+  { label: "Packages", href: "/packages" },
   { label: "Visa", href: "/visa" },
   { label: "Tickets", href: "/tickets" },
   { label: "Deals", href: "/deals", hot: true },
@@ -35,7 +36,7 @@ export function Navbar() {
   return (
     <div className="sticky top-0 z-50">
       {/* Top banner strip (sticky, full width) */}
-      <div className="bg-[#0F172A] text-slate-300 text-xs py-2 border-b border-slate-800">
+      <div className="bg-[#111111] text-slate-300 text-xs py-2 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 text-amber-400 font-medium">
@@ -101,12 +102,12 @@ export function Navbar() {
           <div className="flex h-16 items-center justify-between gap-3 px-3 sm:h-[4.25rem] sm:px-5">
             {/* Logo */}
             <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0F172A] text-amber-400 shadow-md transition-colors group-hover:bg-[#1E40AF]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#111111] text-amber-400 shadow-md transition-colors group-hover:bg-[#4F46E5]">
                 <FlightFlyMark className="h-5 w-5 transition-transform group-hover:scale-110" />
               </div>
               <div className="hidden sm:flex sm:flex-col">
-                <span className="flex items-center gap-1 text-lg font-semibold leading-tight tracking-tight text-[#0F172A]">
-                  FLIGHT<span className="text-[#1E40AF]">FLY</span>
+                <span className="flex items-center gap-1 text-lg font-semibold leading-tight tracking-tight text-[#111111]">
+                  FLIGHT<span className="text-[#4F46E5]">FLY</span>
                   <span className="h-2 w-2 rounded-full bg-[#D97706]"></span>
                 </span>
                 <span className="text-[9px] font-semibold uppercase tracking-widest text-slate-400">Corporate Luxury Travel</span>
@@ -122,7 +123,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={`u-draw px-2.5 py-2 text-[12.5px] font-medium transition-colors lg:text-sm ${
-                      isActive ? "text-[#1E40AF]" : "text-[#0F172A] hover:text-[#1E40AF]"
+                      isActive ? "text-[#4F46E5]" : "text-[#111111] hover:text-[#4F46E5]"
                     }`}
                   >
                     {link.label}
@@ -140,7 +141,7 @@ export function Navbar() {
             <div className="hidden items-center gap-2 md:flex">
               {user ? (
                 <div className="flex items-center gap-2">
-                  <Button render={<Link href={dashboardHref} />} className="flex h-10 items-center gap-2 rounded-xl bg-[#1E40AF] px-3 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#0F172A] sm:px-4 sm:text-sm">
+                  <Button render={<Link href={dashboardHref} />} className="flex h-10 items-center gap-2 rounded-xl bg-[#4F46E5] px-3 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#111111] sm:px-4 sm:text-sm">
                     <LayoutDashboard className="h-4 w-4 text-amber-300" />
                     <span className="hidden sm:inline">{role === "admin" ? "Admin Dashboard" : "User Dashboard"}</span>
                   </Button>
@@ -149,7 +150,7 @@ export function Navbar() {
                   </Button>
                 </div>
               ) : (
-                <Button render={<Link href="/login?tab=login" />} variant="ghost" className="h-10 px-3 text-sm font-medium text-[#0F172A] hover:bg-slate-100 hover:text-[#1E40AF]">
+                <Button render={<Link href="/login?tab=login" />} variant="ghost" className="h-10 px-3 text-sm font-medium text-[#111111] hover:bg-slate-100 hover:text-[#4F46E5]">
                   <User className="mr-1.5 h-4 w-4 text-slate-500" /> Login
                 </Button>
               )}
@@ -160,24 +161,24 @@ export function Navbar() {
               <Sheet>
                 <SheetTrigger>
                   <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50">
-                    <Menu className="h-5 w-5 text-[#0F172A]" />
+                    <Menu className="h-5 w-5 text-[#111111]" />
                   </div>
                 </SheetTrigger>
                 <SheetContent side="right" className="flex flex-col justify-between border-slate-200 bg-white p-6">
                   <div>
                     <SheetHeader className="mb-6 text-left">
-                      <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-[#0F172A]">
-                        <Plane className="h-5 w-5 text-[#1E40AF]" /> FLIGHTFLY
+                      <SheetTitle className="flex items-center gap-2 text-xl font-semibold text-[#111111]">
+                        <Plane className="h-5 w-5 text-[#4F46E5]" /> FLIGHTFLY
                       </SheetTitle>
                     </SheetHeader>
 
-                    <nav className="flex flex-col gap-4 text-base font-medium text-[#0F172A]">
+                    <nav className="flex flex-col gap-4 text-base font-medium text-[#111111]">
                       {NAV_LINKS.map((link) => (
                         <Link
                           key={link.label}
                           href={link.href}
-                          className={`flex items-center justify-between border-b border-slate-100 py-2 transition-colors hover:text-[#1E40AF] ${
-                            isLinkActive(pathname, link.href) ? "text-[#1E40AF]" : ""
+                          className={`flex items-center justify-between border-b border-slate-100 py-2 transition-colors hover:text-[#4F46E5] ${
+                            isLinkActive(pathname, link.href) ? "text-[#4F46E5]" : ""
                           }`}
                         >
                           {link.label}
@@ -189,7 +190,7 @@ export function Navbar() {
 
                   <div className="space-y-3 border-t border-slate-200 pt-6">
                     {user ? (
-                      <Button render={<Link href={dashboardHref} />} className="h-11 w-full bg-[#1E40AF] font-medium text-white">
+                      <Button render={<Link href={dashboardHref} />} className="h-11 w-full bg-[#4F46E5] font-medium text-white">
                         <Sparkles className="mr-2 h-4 w-4 text-amber-300" /> Open Dashboard ({role})
                       </Button>
                     ) : (

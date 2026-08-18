@@ -57,6 +57,9 @@ model Booking {
   itemTitle     String
   itemType      BookingItemType
   price         String
+  promoCode     String?
+  discount      String?
+  finalPrice    String
   cabinClass    String
   paymentType   PaymentType
   travelDate    String?
@@ -71,6 +74,17 @@ model Booking {
 
   @@index([userId])
   @@index([status])
+}
+
+model PromoCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  percentOff  Int
+  active      Boolean  @default(true)
+  description String?
+  usageCount  Int      @default(0)
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
 }
 
 model Favorite {

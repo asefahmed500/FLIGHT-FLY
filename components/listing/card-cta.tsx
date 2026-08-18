@@ -17,7 +17,7 @@ export function CardCta({ detailsHref, actionLabel = "Book Now", onAction }: Car
         render={<Link href={detailsHref} />}
         variant="outline"
         size="sm"
-        className="h-9 flex-1 border-slate-200 bg-white text-xs font-medium text-[#0F172A] hover:bg-slate-50 hover:text-[#1E40AF]"
+        className="h-9 flex-1 border-slate-200 bg-white text-xs font-medium text-[#111111] hover:bg-slate-50 hover:text-[#4F46E5]"
       >
         View Details
       </Button>

@@ -8,13 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Star, MapPin, ArrowRight, Heart, Sparkles } from "lucide-react"
 import { useCatalog } from "@/lib/firestore-data"
+import type { BookingItemInfo } from "@/lib/stores/booking-store"
 import type { CatalogItem } from "@/lib/types"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
 import { DealChip } from "@/components/deal-chip"
 
 interface FeaturedDestinationsProps {
-  onBookItem: (item: { title: string; price: string; subtitle: string; rating: number; type: "flight" | "hotel" | "tour" | "package" | "visa" | "ticket" }) => void
+  onBookItem: (item: BookingItemInfo) => void
 }
 
 interface DestinationCard {
@@ -134,10 +135,10 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
         {/* Section Header */}
         <Reveal className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#1E40AF] mb-2.5">
+            <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#4F46E5] mb-2.5">
               <Sparkles className="w-3.5 h-3.5" /> Curated Global Escapes
             </div>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-[#0F172A] tracking-[-0.01em]">
+            <h2 className="text-3xl sm:text-4xl font-semibold text-[#111111] tracking-[-0.01em]">
               Featured Destinations
             </h2>
           </div>
@@ -153,7 +154,7 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
               {destinations.map((dest, i) => (
                 <CarouselItem key={dest.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Reveal variant="scale" delay={i * 80} className="h-full">
-                    <Card className="group flex h-[380px] flex-col justify-between overflow-hidden rounded-xl shadow-sm transition-all duration-300 hover:shadow-xl">
+                    <Card className="group flex h-[380px] flex-col justify-between overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-xl">
                       {/* Destination Image & Badges */}
                       <div className="relative h-60 overflow-hidden">
                         <img 
@@ -164,7 +165,7 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                         
                         <div className="absolute top-4 left-4 flex items-center gap-2">
-                          <Badge className="bg-[#0F172A]/80 backdrop-blur-md text-amber-300 border border-white/20 font-medium text-xs">
+                          <Badge className="bg-[#111111]/80 backdrop-blur-md text-amber-300 border border-white/20 font-medium text-xs">
                             {dest.tag}
                           </Badge>
                         </div>
@@ -194,7 +195,7 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
                         <div className="pt-4 mt-auto border-t border-slate-100">
                           <div className="mb-3">
                             <span className="text-[10px] text-slate-400 font-medium uppercase block">Starting Price</span>
-                            <span className="text-xl font-semibold text-[#0F172A]">
+                            <span className="text-xl font-semibold text-[#111111]">
                               {dest.price}
                               {dest.originalPrice && (
                                 <span className="ml-1.5 text-xs font-medium text-slate-400 line-through">{dest.originalPrice}</span>
@@ -204,7 +205,8 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
                           <CardCta
                             detailsHref={`/catalog/${dest.id}`}
                             actionLabel="Book Now"
-                            onAction={() => onBookItem({
+onAction={() => onBookItem({
+                              itemId: dest.id,
                               title: `${dest.name}, ${dest.country}`,
                               subtitle: dest.description,
                               price: dest.price,

@@ -13,6 +13,7 @@ export interface AuthIdentity {
 
 // Verify a Firebase ID token server-side using the Identity Toolkit
 // getAccountInfo endpoint (no firebase-admin dependency required).
+// Returns null for invalid tokens OR disabled accounts.
 export async function verifyIdToken(idToken: string | undefined | null): Promise<AuthIdentity | null> {
   if (!idToken || !API_KEY) return null
   try {
@@ -29,6 +30,7 @@ export async function verifyIdToken(idToken: string | undefined | null): Promise
     const data = await res.json()
     const acct = data?.users?.[0]
     if (!acct?.localId) return null
+    if (acct.disabled) return null
     return {
       uid: acct.localId,
       email: acct.email ?? "",
@@ -53,21 +55,22 @@ export async function resolveEffectiveRole(identity: AuthIdentity): Promise<User
 }
 
 // Upsert the Firebase identity into Postgres (the "in sync" step).
+// displayName is owned by Postgres once created (/api/users/me updates it);
+// sync never overwrites an existing name with the Auth-side fallback.
 export async function syncUser(identity: AuthIdentity) {
   const role = await resolveEffectiveRole(identity)
-  const displayName = identity.displayName || identity.email.split("@")[0] || "VIP Traveler"
   const user = await db.user.upsert({
     where: { uid: identity.uid },
     create: {
       uid: identity.uid,
       email: identity.email,
-      displayName,
+      displayName:
+        identity.displayName || identity.email.split("@")[0] || "VIP Traveler",
       photoURL: identity.photoURL,
       role,
     },
     update: {
       email: identity.email,
-      displayName,
       photoURL: identity.photoURL,
       role,
     },

@@ -46,6 +46,7 @@ export default function AdminUsersPage() {
     setError("")
     try {
       await updateUserRole(uid, role)
+      refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update role.")
     } finally {
@@ -135,7 +136,7 @@ export default function AdminUsersPage() {
                     </TableCell>
                     <TableCell className="font-mono text-xs text-muted-foreground">{u.email}</TableCell>
                     <TableCell>
-                      <Badge className={cn("capitalize", u.role === "admin" ? "bg-amber-500 text-slate-950" : "bg-[#1E40AF] text-white")}>
+                      <Badge className={cn("capitalize", u.role === "admin" ? "bg-amber-500 text-slate-950" : "bg-[#4F46E5] text-white")}>
                         {u.role}
                       </Badge>
                     </TableCell>
@@ -151,7 +152,7 @@ export default function AdminUsersPage() {
                           <ShieldOff className="size-3.5" data-icon="inline-start" /> Demote
                         </Button>
                       ) : (
-                        <Button size="sm" disabled={busy === u.id} onClick={() => setRole(u.id, "admin")} className="bg-[#1E40AF] hover:bg-[#0F172A]">
+                        <Button size="sm" disabled={busy === u.id} onClick={() => setRole(u.id, "admin")} className="bg-[#4F46E5] hover:bg-[#111111]">
                           <ShieldCheck className="size-3.5" data-icon="inline-start" /> Promote
                         </Button>
                       )}

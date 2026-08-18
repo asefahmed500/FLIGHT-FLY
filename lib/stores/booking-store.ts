@@ -12,6 +12,8 @@ export interface BookingItemInfo {
   rating?: number
   type?: BookingItemType
   href?: string
+  /** Firestore doc id (deals/{id} or catalog/{id}) — lets the server verify price. */
+  itemId?: string
 }
 
 interface BookingState {

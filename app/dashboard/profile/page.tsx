@@ -1,10 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuth } from "@/lib/auth-context"
-import { doc, updateDoc } from "firebase/firestore"
-import { db } from "@/lib/firebase"
-import { useMyBookings } from "@/lib/app-data"
+import { updateMyProfile, useMyBookings } from "@/lib/app-data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -16,18 +14,25 @@ import { useToastStore } from "@/lib/stores/toast-store"
 import { ShieldCheck, Mail, KeyRound, Plane, CheckCheck, Loader2 } from "lucide-react"
 
 export default function DashboardProfilePage() {
-  const { user, profile, role } = useAuth()
+  const { user, profile, role, refreshProfile } = useAuth()
   const { bookings } = useMyBookings(user)
   const pushToast = useToastStore((s) => s.push)
-  const [name, setName] = useState(profile?.displayName ?? "")
+  const [name, setName] = useState("")
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  // Sync the input once the profile has loaded from Postgres.
+  useEffect(() => {
+    const t = setTimeout(() => setName(profile?.displayName ?? ""), 0)
+    return () => clearTimeout(t)
+  }, [profile?.displayName])
 
   const saveName = async () => {
     if (!user || !name.trim() || saving) return
     setSaving(true)
     try {
-      await updateDoc(doc(db, "users", user.uid), { displayName: name.trim() })
+      await updateMyProfile(user, name.trim())
+      await refreshProfile?.()
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
       pushToast({
@@ -76,7 +81,7 @@ export default function DashboardProfilePage() {
               <h2 className="text-lg font-semibold tracking-[-0.01em]">
                 {profile?.displayName || user?.email?.split("@")[0] || "VIP Traveler"}
               </h2>
-              <Badge className={role === "admin" ? "bg-amber-500 text-slate-950 uppercase" : "bg-[#1E40AF] text-white uppercase"}>
+              <Badge className={role === "admin" ? "bg-amber-500 text-slate-950 uppercase" : "bg-[#4F46E5] text-white uppercase"}>
                 <ShieldCheck data-icon="inline-start" /> {role}
               </Badge>
             </div>
@@ -87,7 +92,7 @@ export default function DashboardProfilePage() {
           <div className="grid grid-cols-3 gap-3 sm:w-72">
             {stats.map((s) => (
               <div key={s.label} className="flex flex-col items-center gap-1 rounded-xl bg-muted/60 px-3 py-3 text-center">
-                <s.icon className="size-4 text-[#1E40AF]" />
+                <s.icon className="size-4 text-[#4F46E5]" />
                 <span className="text-lg font-semibold leading-none">{s.value}</span>
                 <span className="text-[9px] font-medium uppercase tracking-wide text-muted-foreground">{s.label}</span>
               </div>
@@ -120,7 +125,7 @@ export default function DashboardProfilePage() {
           </FieldGroup>
           <Separator className="my-5" />
           <div className="flex items-center gap-3">
-            <Button onClick={saveName} disabled={saving || !name.trim()} className="bg-[#1E40AF] hover:bg-[#0F172A]">
+            <Button onClick={saveName} disabled={saving || !name.trim()} className="bg-[#4F46E5] hover:bg-[#111111]">
               {saving ? (
                 <>
                   <Loader2 className="animate-spin" data-icon="inline-start" /> Saving…

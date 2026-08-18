@@ -103,7 +103,7 @@ export function Chatbot() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close concierge chat" : "Open concierge chat"}
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#0F172A] text-white shadow-xl shadow-slate-900/30 transition-all hover:scale-105 hover:bg-[#1E40AF]"
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#111111] text-white shadow-xl shadow-slate-900/30 transition-all hover:scale-105 hover:bg-[#4F46E5]"
       >
         {open ? <X className="h-6 w-6" /> : <BotMessageSquare className="h-6 w-6" />}
         {!open && <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span><span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500"></span></span>}
@@ -113,7 +113,7 @@ export function Chatbot() {
       {open && (
         <div className="fixed bottom-24 right-5 z-50 flex h-[28rem] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/20">
           {/* Header */}
-          <div className="flex items-center gap-3 bg-[#0F172A] px-4 py-3.5 text-white">
+          <div className="flex items-center gap-3 bg-[#111111] px-4 py-3.5 text-white">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400/20">
               <FlightFlyMark className="h-5 w-5 text-amber-400" />
             </div>
@@ -133,7 +133,7 @@ export function Chatbot() {
                 <div
                   className={`max-w-[85%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-sm ${
                     m.role === "user"
-                      ? "rounded-br-sm bg-[#1E40AF] text-white"
+                      ? "rounded-br-sm bg-[#4F46E5] text-white"
                       : "rounded-bl-sm border border-slate-200 bg-white text-slate-700"
                   }`}
                 >
@@ -158,7 +158,7 @@ export function Chatbot() {
               <button
                 key={q}
                 onClick={() => send(q)}
-                className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:border-[#1E40AF] hover:bg-blue-50 hover:text-[#1E40AF]"
+                className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:border-[#4F46E5] hover:bg-blue-50 hover:text-[#4F46E5]"
               >
                 {q}
               </button>
@@ -177,7 +177,7 @@ export function Chatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about flights, visas, bookings…"
-              className="h-10 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-[13px] outline-none placeholder:text-slate-400 focus:border-[#1E40AF] focus:bg-white"
+              className="h-10 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-[13px] outline-none placeholder:text-slate-400 focus:border-[#4F46E5] focus:bg-white"
             />
             <button
               type="submit"

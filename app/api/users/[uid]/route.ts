@@ -32,6 +32,26 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ uid: s
     return NextResponse.json({ error: "Allowlisted admin accounts cannot be demoted." }, { status: 400 })
   }
 
+  // Server-side self-demotion guard (prevents last-admin lockout footguns).
+  if (uid === identity.uid && role === "customer") {
+    return NextResponse.json({ error: "You cannot demote your own admin account." }, { status: 400 })
+  }
+
+  // Block demoting the last remaining Postgres admin.
+  if (role === "customer") {
+    const adminCount = await db.user.count({ where: { role: "admin" } })
+    const allowlistAdmins = (await db.user.findMany({
+      where: { role: "admin" },
+      select: { email: true },
+    })).filter((u) => roleForEmail(u.email) === "admin").length
+    if (adminCount - allowlistAdmins <= 1) {
+      return NextResponse.json(
+        { error: "Cannot demote the last non-allowlist admin." },
+        { status: 400 }
+      )
+    }
+  }
+
   const user = await db.user.update({
     where: { uid },
     data: { role },

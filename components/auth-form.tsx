@@ -169,7 +169,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                     type="email"
                     placeholder="name@company.com"
                     {...forgotForm.register("email")}
-                    className="pl-9 h-11 border-slate-200 font-normal focus:border-[#1E40AF]"
+                    className="pl-9 h-11 border-slate-200 font-normal focus:border-[#4F46E5]"
                   />
                 </div>
                 {forgotForm.formState.errors.email && (
@@ -177,14 +177,14 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                 )}
               </div>
 
-              <Button type="submit" disabled={forgotForm.formState.isSubmitting} className="w-full h-11 bg-[#1E40AF] hover:bg-[#0F172A] text-white font-medium shadow-md transition-all flex items-center justify-center gap-2">
+              <Button type="submit" disabled={forgotForm.formState.isSubmitting} className="w-full h-11 bg-[#4F46E5] hover:bg-[#111111] text-white font-medium shadow-md transition-all flex items-center justify-center gap-2">
                 <KeyRound className="w-4 h-4" /> {forgotForm.formState.isSubmitting ? "Sending link..." : "Send Reset Instructions"}
               </Button>
 
               <button
                 type="button"
                 onClick={() => setTab("login")}
-                className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-600 hover:text-[#1E40AF] font-medium pt-2"
+                className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-600 hover:text-[#4F46E5] font-medium pt-2"
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> Back to Sign In
               </button>
@@ -192,10 +192,10 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
           ) : (
             <Tabs value={tab} onValueChange={(v) => setTab(v as "login" | "signup")}>
               <TabsList className="grid grid-cols-2 mb-6 bg-slate-100 p-1 rounded-xl">
-                <TabsTrigger value="login" className="rounded-lg font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">
+                <TabsTrigger value="login" className="rounded-lg font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#111111] data-[state=active]:shadow-sm">
                   Sign In
                 </TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-lg font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">
+                <TabsTrigger value="signup" className="rounded-lg font-medium text-sm data-[state=active]:bg-white data-[state=active]:text-[#111111] data-[state=active]:shadow-sm">
                   Create Account
                 </TabsTrigger>
               </TabsList>
@@ -211,7 +211,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                         type="email"
                         placeholder="name@company.com"
                         {...loginForm.register("email")}
-                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#1E40AF]"
+                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#4F46E5]"
                       />
                     </div>
                     {loginForm.formState.errors.email && (
@@ -225,7 +225,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                       <button
                         type="button"
                         onClick={() => setTab("forgot")}
-                        className="text-xs text-[#1E40AF] hover:underline font-medium cursor-pointer"
+                        className="text-xs text-[#4F46E5] hover:underline font-medium cursor-pointer"
                       >
                         Forgot password?
                       </button>
@@ -237,7 +237,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                         type="password"
                         placeholder="••••••••"
                         {...loginForm.register("password")}
-                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#1E40AF]"
+                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#4F46E5]"
                       />
                     </div>
                     {loginForm.formState.errors.password && (
@@ -245,7 +245,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                     )}
                   </div>
 
-                  <Button type="submit" disabled={loginForm.formState.isSubmitting} className="w-full h-11 bg-[#0F172A] hover:bg-[#1E40AF] text-white font-medium shadow-md transition-all">
+                  <Button type="submit" disabled={loginForm.formState.isSubmitting} className="w-full h-11 bg-[#111111] hover:bg-[#4F46E5] text-white font-medium shadow-md transition-all">
                     {loginForm.formState.isSubmitting ? "Signing in..." : "Sign In to Account"} <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </form>
@@ -262,7 +262,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                         type="text"
                         placeholder="John Doe"
                         {...signupForm.register("fullname")}
-                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#1E40AF]"
+                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#4F46E5]"
                       />
                     </div>
                     {signupForm.formState.errors.fullname && (
@@ -279,7 +279,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                         type="email"
                         placeholder="name@company.com"
                         {...signupForm.register("email")}
-                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#1E40AF]"
+                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#4F46E5]"
                       />
                     </div>
                     {signupForm.formState.errors.email && (
@@ -296,7 +296,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
                         type="password"
                         placeholder="Min 8 characters"
                         {...signupForm.register("password")}
-                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#1E40AF]"
+                        className="pl-9 h-11 border-slate-200 font-normal focus:border-[#4F46E5]"
                       />
                     </div>
                     {signupForm.formState.errors.password && (
@@ -316,7 +316,7 @@ export function AuthForm({ initialTab = "login", onSuccess }: AuthFormProps) {
 
       <div className="mt-6 pt-4 border-t border-slate-100 text-center">
         <p className="text-xs text-slate-500 font-normal">
-          By continuing, you agree to FlightFly&apos;s <a href="#" className="underline text-slate-700">Terms of Service</a> & <a href="#" className="underline text-slate-700">Privacy Policy</a>.
+          By continuing, you agree to FlightFly&apos;s <a href="/terms" className="underline text-slate-700">Terms of Service</a> & <a href="/privacy" className="underline text-slate-700">Privacy Policy</a>.
         </p>
       </div>
     </div>

@@ -39,6 +39,22 @@ function bookingMonth(b: { createdAt?: { seconds?: number; nanoseconds?: number 
   return -1
 }
 
+function ts(b: { createdAt?: { seconds?: number; nanoseconds?: number } | string }): number {
+  const t = b.createdAt
+  if (t && typeof t === "object" && "seconds" in t && typeof t.seconds === "number") {
+    return t.seconds * 1000
+  }
+  if (typeof t === "string") {
+    const v = new Date(t).getTime()
+    if (Number.isFinite(v)) return v
+  }
+  return 0
+}
+
+function gross(b: Booking): number {
+  return parsePrice(b.finalPrice || b.price)
+}
+
 export default function AdminOverviewPage() {
   const { user } = useAuth()
   const { bookings, loading } = useAllBookings(user)
@@ -46,13 +62,13 @@ export default function AdminOverviewPage() {
 
   const approved = bookings.filter((b) => b.status === "approved")
   const pending = bookings.filter((b) => b.status === "pending")
-  const revenue = approved.reduce((sum, b) => sum + parsePrice(b.price), 0)
+  const revenue = approved.reduce((sum, b) => sum + gross(b), 0)
   const avgTicket = approved.length ? revenue / approved.length : 0
 
   const monthly: Record<number, number> = {}
   approved.forEach((b) => {
     const m = bookingMonth(b)
-    if (m >= 0) monthly[m] = (monthly[m] || 0) + parsePrice(b.price)
+    if (m >= 0) monthly[m] = (monthly[m] || 0) + gross(b)
   })
   const revenueData = MONTH_NAMES.map((month, i) => ({ month, revenue: monthly[i] || 0 }))
 
@@ -82,7 +98,7 @@ export default function AdminOverviewPage() {
           loading={loading}
           hint={<span className="text-blue-600 font-medium">{pending.length} awaiting review</span>}
           icon={<FileText className="size-5" />}
-          iconClassName="bg-[#1E40AF]/10 text-[#1E40AF]"
+          iconClassName="bg-[#4F46E5]/10 text-[#4F46E5]"
         />
         <StatCard
           label="Active Users"
@@ -123,7 +139,7 @@ export default function AdminOverviewPage() {
                     <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
                     <YAxis stroke="#64748b" fontSize={12} />
                     <Tooltip />
-                    <Bar dataKey="revenue" fill="#1E40AF" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="revenue" fill="#4F46E5" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -194,21 +210,26 @@ export default function AdminOverviewPage() {
               </TableHeader>
               <TableBody>
                 {[...bookings]
-                  .sort((a, b) => {
-                    const at = a.createdAt && typeof a.createdAt === "object" ? a.createdAt.seconds || 0 : 0
-                    const bt = b.createdAt && typeof b.createdAt === "object" ? b.createdAt.seconds || 0 : 0
-                    return bt - at
-                  })
+                  .sort((a, b) => ts(b) - ts(a))
                   .slice(0, 5)
                   .map((b: Booking) => (
                     <TableRow key={b.id}>
-                      <TableCell className="font-mono text-xs font-semibold text-[#1E40AF]">{b.refId}</TableCell>
+                      <TableCell className="font-mono text-xs font-semibold text-[#4F46E5]">{b.refId}</TableCell>
                       <TableCell className="font-medium">{b.passengerName}</TableCell>
                       <TableCell>
                         <p className="font-medium">{b.itemTitle}</p>
                         <p className="text-xs uppercase tracking-wide text-muted-foreground">{b.itemType}</p>
                       </TableCell>
-                      <TableCell className="font-semibold text-emerald-600">{b.price}</TableCell>
+                      <TableCell className="font-semibold text-emerald-600">
+                        {b.finalPrice && b.finalPrice !== b.price ? (
+                          <span>
+                            <span className="mr-1 line-through text-muted-foreground">{b.price}</span>
+                            {b.finalPrice}
+                          </span>
+                        ) : (
+                          b.price
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"

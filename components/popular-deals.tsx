@@ -13,10 +13,11 @@ import { useMyFavorites, toggleFavorite } from "@/lib/app-data"
 import { useAuth } from "@/lib/auth-context"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
+import type { BookingItemInfo } from "@/lib/stores/booking-store"
 import type { BookingItemType } from "@/lib/types"
 
 interface PopularDealsProps {
-  onBookItem: (item: { title: string; price: string; subtitle: string; rating: number; type: BookingItemType }) => void
+  onBookItem: (item: BookingItemInfo) => void
 }
 
 const STATIC_DEALS = [
@@ -148,7 +149,7 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
   const router = useRouter()
   const { deals } = useDeals()
   const { user } = useAuth()
-  const { favorites } = useMyFavorites(user)
+  const { favorites, refresh } = useMyFavorites(user)
 
   const savedIds = new Set(favorites.map((f) => f.id))
   const source = deals.length > 0 ? deals : STATIC_DEALS
@@ -168,13 +169,16 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
         category: deal.category,
         image: deal.image,
       })
+      refresh()
+    } catch {
+      // Favorite toggle failed — leave UI unchanged.
     } finally {
       setSavingId(null)
     }
   }
 
   return (
-    <section id="popular-deals" className="py-24 bg-[#F8FAFC]">
+    <section id="popular-deals" className="py-24 bg-[#FAFAFA]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -183,7 +187,7 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
             <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D97706] mb-2.5">
               <Tag className="w-3.5 h-3.5" /> Exclusive Member Offers
             </div>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-[#0F172A] tracking-[-0.01em]">
+            <h2 className="text-3xl sm:text-4xl font-semibold text-[#111111] tracking-[-0.01em]">
               Popular Limited-Time Deals
             </h2>
           </div>
@@ -192,12 +196,12 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
           <div className="mt-4 md:mt-0">
             <Tabs defaultValue="all" value={filter} onValueChange={setFilter} className="w-auto">
               <TabsList className="flex-wrap bg-slate-200/70 p-1 rounded-xl">
-                <TabsTrigger value="all" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">All Deals</TabsTrigger>
-                <TabsTrigger value="flights" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">Flights</TabsTrigger>
-                <TabsTrigger value="hotels" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">Hotels</TabsTrigger>
-                <TabsTrigger value="packages" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">Packages</TabsTrigger>
-                <TabsTrigger value="visa" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">Visa</TabsTrigger>
-                <TabsTrigger value="tickets" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">Tickets</TabsTrigger>
+                <TabsTrigger value="all" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">All Deals</TabsTrigger>
+                <TabsTrigger value="flights" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Flights</TabsTrigger>
+                <TabsTrigger value="hotels" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Hotels</TabsTrigger>
+                <TabsTrigger value="packages" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Packages</TabsTrigger>
+                <TabsTrigger value="visa" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Visa</TabsTrigger>
+                <TabsTrigger value="tickets" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Tickets</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -207,14 +211,14 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
           {filteredDeals.map((deal, i) => (
             <Reveal key={deal.id} variant="scale" delay={(i % 3) * 80} className="h-full">
-            <Card className="rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden bg-white group flex flex-col justify-between">
+            <Card className="rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden bg-white group flex flex-col justify-between">
 
               
               <div className="relative h-52 overflow-hidden">
                 <img 
                   src={deal.image} 
                   alt={deal.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 
@@ -239,7 +243,7 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
 
               <CardContent className="p-5 flex-1 flex flex-col justify-between">
                 <Link href={`/deals/${deal.id}`} className="block">
-                  <h3 className="text-base font-semibold text-[#0F172A] leading-snug group-hover:text-[#1E40AF] transition-colors tracking-[-0.01em] line-clamp-1">
+                  <h3 className="text-base font-semibold text-[#111111] leading-snug group-hover:text-[#4F46E5] transition-colors tracking-[-0.01em] line-clamp-1">
                     {deal.title}
                   </h3>
                 </Link>
@@ -247,12 +251,13 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
                 <div className="pt-3 mt-3 border-t border-slate-100">
                   <div className="mb-3 flex items-baseline gap-2">
                     <span className="text-xs text-slate-400 line-through font-normal">{deal.originalPrice}</span>
-                    <span className="text-lg font-semibold text-[#1E40AF]">{deal.discountPrice}</span>
+                    <span className="text-lg font-semibold text-[#4F46E5]">{deal.discountPrice}</span>
                   </div>
                   <CardCta
                     detailsHref={`/deals/${deal.id}`}
                     actionLabel="Claim Deal"
                     onAction={() => onBookItem({
+                      itemId: deal.id,
                       title: deal.title,
                       subtitle: deal.subtitle,
                       price: deal.discountPrice,

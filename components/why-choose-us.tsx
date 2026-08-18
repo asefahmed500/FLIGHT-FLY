@@ -30,10 +30,10 @@ export function WhyChooseUs() {
         
         {/* Header */}
         <Reveal className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#1E40AF] mb-3 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100">
+          <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#4F46E5] mb-3 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100">
             <Sparkles className="w-3.5 h-3.5" /> Corporate Excellence & Security
           </div>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-[#0F172A] tracking-[-0.01em]">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-[#111111] tracking-[-0.01em]">
             Why World Travelers Trust FlightFly
           </h2>
           <p className="text-slate-600 text-sm mt-3 font-normal leading-relaxed">
@@ -47,11 +47,11 @@ export function WhyChooseUs() {
             const IconComponent = resolveFeatureIcon(feat.icon)
             return (
               <Reveal key={feat.id} variant="scale" delay={(idx % 6) * 60}>
-                <div className="flex h-full flex-col rounded-xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl group p-5">
-                  <div className="w-10 h-10 rounded-lg bg-[#0F172A] text-amber-400 flex items-center justify-center mb-4 group-hover:bg-[#1E40AF] group-hover:text-white transition-colors shadow-md">
+                <div className="flex h-full flex-col rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-xl group p-5">
+                  <div className="w-10 h-10 rounded-lg bg-[#111111] text-amber-400 flex items-center justify-center mb-4 group-hover:bg-[#4F46E5] group-hover:text-white transition-colors shadow-md">
                     <IconComponent className="w-5 h-5" />
                   </div>
-                  <h3 className="text-sm font-semibold text-[#0F172A] mb-1.5 group-hover:text-[#1E40AF] transition-colors tracking-[-0.01em] leading-snug">
+                  <h3 className="text-sm font-semibold text-[#111111] mb-1.5 group-hover:text-[#4F46E5] transition-colors tracking-[-0.01em] leading-snug">
                     {feat.title}
                   </h3>
                   <p className="text-slate-500 text-xs font-normal leading-relaxed line-clamp-3">

@@ -112,7 +112,7 @@ export function ScrollytellingSection() {
           <div className="mb-2.5 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D97706]">
             <Compass className="h-3.5 w-3.5" /> The FlightFly Way
           </div>
-          <h2 className="text-3xl font-semibold tracking-[-0.01em] text-[#0F172A] sm:text-4xl">
+          <h2 className="text-3xl font-semibold tracking-[-0.01em] text-[#111111] sm:text-4xl">
             A four-step journey, delegated to experts
           </h2>
           <p className="mt-3 text-sm font-normal text-slate-500">
@@ -122,7 +122,7 @@ export function ScrollytellingSection() {
 
         {/* Tall scroll track */}
         <div ref={sectionRef} className="relative h-[400vh]">
-          <div className="sticky top-24 h-[calc(100vh-8.5rem)] overflow-hidden rounded-3xl border border-slate-200/80 bg-[#0F172A] shadow-xl shadow-slate-900/10">
+          <div className="sticky top-24 h-[calc(100vh-8.5rem)] overflow-hidden rounded-3xl border border-slate-200/80 bg-[#111111] shadow-xl shadow-slate-900/10">
             <div className="flex h-full flex-col gap-6 p-6 sm:p-8 lg:grid lg:grid-cols-[300px_1fr] lg:items-center lg:gap-10 lg:p-10">
               {/* Step rail */}
               <div className="flex flex-col gap-3">
@@ -134,7 +134,7 @@ export function ScrollytellingSection() {
                     <button
                       key={step.id}
                       onClick={() => jumpToStep(i)}
-                      className={`group flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-300 ${
+                      className={`group flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
                         isActive
                           ? "border-amber-400/50 bg-amber-400/10"
                           : "border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/10"

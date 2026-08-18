@@ -217,7 +217,7 @@ export default function AdminCrmPage() {
             const T = TABS[kind]
             const TIcon = T.icon
             return (
-              <TabsTrigger key={kind} value={kind} className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#0F172A]">
+              <TabsTrigger key={kind} value={kind} className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#111111]">
                 <TIcon className="mr-1.5 size-3.5" /> {T.label}
               </TabsTrigger>
             )
@@ -231,7 +231,7 @@ export default function AdminCrmPage() {
               <Card className="rounded-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <T.icon className="size-4 text-[#1E40AF]" /> {T.single ? "Edit Promo Banner" : editingId && kind === tab ? "Edit Content" : `Create ${T.label.replace(/s$/, "")}`}
+                    <T.icon className="size-4 text-[#4F46E5]" /> {T.single ? "Edit Promo Banner" : editingId && kind === tab ? "Edit Content" : `Create ${T.label.replace(/s$/, "")}`}
                   </CardTitle>
                   <CardDescription>{T.hint}</CardDescription>
                 </CardHeader>

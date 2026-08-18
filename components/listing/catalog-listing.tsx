@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { Suspense, useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Search, Star } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -31,7 +32,7 @@ const KIND_TYPE: Record<CatalogKind, BookingItemType> = {
   promo: "package",
 }
 
-export function CatalogListing({
+function CatalogListingInner({
   kind,
   eyebrow,
   title,
@@ -41,9 +42,20 @@ export function CatalogListing({
   ctaLabel,
 }: CatalogListingProps) {
   const { catalog, loading } = useCatalog()
+  const searchParams = useSearchParams()
   const [query, setQuery] = useState("")
   const [onlyDeals, setOnlyDeals] = useState(false)
   const [sort, setSort] = useState("popular")
+
+  // Consume hero-search q param once on mount.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const q = searchParams.get("q")
+      if (q) setQuery(q)
+    }, 0)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const items = useMemo<ListingCardData[]>(() => {
     const live = catalog.filter((c) => c.kind === kind)
@@ -83,12 +95,12 @@ export function CatalogListing({
     return filtered
   }, [catalog, kind, query, onlyDeals, sort])
 
-  const accentIcon = accent === "amber" ? "bg-[#D97706]/10" : "bg-[#1E40AF]/10"
+  const accentIcon = accent === "amber" ? "bg-[#D97706]/10" : "bg-[#4F46E5]/10"
 
   return (
     <div className="flex flex-col gap-10">
       {/* Page hero */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#0F172A] px-6 py-16 text-white sm:px-12 sm:py-20">
+      <section className="relative overflow-hidden rounded-3xl bg-[#111111] px-6 py-16 text-white sm:px-12 sm:py-20">
         <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:22px_22px]" />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
           <div className={`mb-5 flex h-14 w-14 items-center justify-center rounded-xl ${accentIcon}`}>
@@ -162,5 +174,13 @@ export function CatalogListing({
         </div>
       )}
     </div>
+  )
+}
+
+export function CatalogListing(props: CatalogListingProps) {
+  return (
+    <Suspense fallback={<Skeleton className="h-96 w-full rounded-xl" />}>
+      <CatalogListingInner {...props} />
+    </Suspense>
   )
 }

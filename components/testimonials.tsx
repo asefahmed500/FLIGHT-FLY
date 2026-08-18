@@ -58,10 +58,10 @@ export function Testimonials() {
         
         {/* Header */}
         <Reveal className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#1E40AF] mb-3 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100">
+          <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#4F46E5] mb-3 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100">
             <Sparkles className="w-3.5 h-3.5" /> Client Reviews & Ratings
           </div>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-[#0F172A] tracking-[-0.01em]">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-[#111111] tracking-[-0.01em]">
             Trusted by Corporate Leaders & Discerning Travelers
           </h2>
           <p className="text-slate-600 text-sm mt-3 font-normal leading-relaxed">
@@ -76,7 +76,7 @@ export function Testimonials() {
               {testimonials.map((t, i) => (
                 <CarouselItem key={t.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <Reveal variant="scale" delay={i * 80} className="h-full">
-                    <Card className="flex h-[340px] flex-col justify-between rounded-xl bg-[#F8FAFC] p-7 shadow-sm transition-all duration-300 hover:shadow-lg">
+                    <Card className="flex h-[340px] flex-col justify-between rounded-xl bg-[#FAFAFA] p-7 shadow-sm transition-all duration-200 hover:shadow-lg">
 
                       <div>
                         <div className="flex items-center justify-between mb-4">
@@ -100,7 +100,7 @@ export function Testimonials() {
                           className="w-11 h-11 rounded-full object-cover border-2 border-amber-400 shrink-0" 
                         />
                         <div className="overflow-hidden">
-                          <h4 className="text-sm font-semibold text-[#0F172A] truncate">{t.name}</h4>
+                          <h4 className="text-sm font-semibold text-[#111111] truncate">{t.name}</h4>
                           <p className="text-xs text-slate-500 font-normal truncate">{t.role}</p>
                           <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-600">
                             <ShieldCheck className="w-3 h-3" /> {t.verified}

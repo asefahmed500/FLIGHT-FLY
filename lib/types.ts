@@ -26,6 +26,9 @@ export interface Booking {
   itemTitle: string
   itemType: BookingItemType
   price: string
+  promoCode?: string | null
+  discount?: string | null
+  finalPrice: string
   cabinClass: string
   paymentType: PaymentType
   travelDate?: string | null
@@ -35,6 +38,17 @@ export interface Booking {
   specialRequests?: string | null
   status: BookingStatus
   createdAt?: { seconds: number; nanoseconds: number }
+}
+
+export interface PromoCodeInfo {
+  id: string
+  code: string
+  percentOff: number
+  active: boolean
+  description: string | null
+  usageCount: number
+  expiresAt: string | null
+  createdAt: string
 }
 
 export type DealCategory = "flights" | "hotels" | "packages" | "tours" | "visa" | "tickets"

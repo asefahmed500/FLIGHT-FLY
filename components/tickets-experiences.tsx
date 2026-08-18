@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Ticket, Star, ArrowRight } from "lucide-react"
+import type { BookingItemInfo } from "@/lib/stores/booking-store"
 import type { BookingItemType } from "@/lib/types"
 import { useCatalog } from "@/lib/firestore-data"
 import { Reveal } from "@/components/motion/reveal"
@@ -12,7 +13,7 @@ import { CardCta } from "@/components/listing/card-cta"
 import { DealChip } from "@/components/deal-chip"
 
 interface TicketsExperiencesProps {
-  onBookItem: (item: { title: string; price: string; subtitle: string; rating: number; type: BookingItemType }) => void
+  onBookItem: (item: BookingItemInfo) => void
 }
 
 const TICKETS = [
@@ -68,7 +69,7 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
           <div className="mb-2.5 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#D97706]">
             <Ticket className="h-3.5 w-3.5" /> Tickets &amp; Experiences
           </div>
-          <h2 className="text-3xl font-semibold tracking-[-0.01em] text-[#0F172A] sm:text-4xl">
+          <h2 className="text-3xl font-semibold tracking-[-0.01em] text-[#111111] sm:text-4xl">
             Unforgettable Events &amp; Experiences
           </h2>
           <p className="mt-3 max-w-2xl text-sm font-normal text-slate-500">
@@ -79,7 +80,7 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
         <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
           {tickets.map((ticket, i) => (
             <Reveal key={ticket.id} variant="scale" delay={i * 80}>
-              <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl">
+              <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-xl">
                 <div className="relative h-44 overflow-hidden">
                   <img src={ticket.image} alt={ticket.title} className="img-zoom h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -91,14 +92,14 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
 
 <CardContent className="flex flex-1 flex-col justify-between p-5">
                   <Link href={`/catalog/${ticket.id}`}>
-                    <h3 className="text-base font-semibold leading-snug tracking-[-0.01em] text-[#0F172A] transition-colors group-hover:text-[#1E40AF] line-clamp-1">
+                    <h3 className="text-base font-semibold leading-snug tracking-[-0.01em] text-[#111111] transition-colors group-hover:text-[#4F46E5] line-clamp-1">
                       {ticket.title}
                     </h3>
                   </Link>
 
                   <div className="pt-3 mt-3 border-t border-slate-100">
                     <div className="mb-3">
-                      <span className="text-lg font-semibold text-[#1E40AF]">
+                      <span className="text-lg font-semibold text-[#4F46E5]">
                         {ticket.price}
                         {ticket.originalPrice && (
                           <span className="ml-1.5 text-xs font-medium text-slate-400 line-through">{ticket.originalPrice}</span>
@@ -108,7 +109,7 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
                     <CardCta
                       detailsHref={`/catalog/${ticket.id}`}
                       actionLabel="Book Now"
-                      onAction={() => onBookItem({ title: ticket.title, subtitle: ticket.subtitle, price: ticket.price, rating: ticket.rating, type: "ticket" })}
+                      onAction={() => onBookItem({ itemId: ticket.id, title: ticket.title, subtitle: ticket.subtitle, price: ticket.price, rating: ticket.rating, type: "ticket" })}
                     />
                   </div>
                 </CardContent>

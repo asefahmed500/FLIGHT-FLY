@@ -1,11 +1,12 @@
 "use client"
 
 import { ShieldCheck, PhoneCall, Mail, MapPin, Globe, CreditCard, Lock } from "lucide-react"
+import Link from "next/link"
 import { FlightFlyMark } from "@/components/icons"
 
 export function Footer() {
   return (
-    <footer className="bg-[#0F172A] text-slate-400 text-sm border-t border-slate-800">
+    <footer className="bg-[#111111] text-slate-400 text-sm border-t border-slate-800">
       
       {/* Upper Footer Links Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -13,15 +14,15 @@ export function Footer() {
           
           {/* Brand Bio */}
           <div className="lg:col-span-1 space-y-4">
-            <a href="#" className="flex items-center gap-2.5 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-slate-950 shadow-md transition-colors group-hover:bg-[#1E40AF]">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-slate-950 shadow-md transition-colors group-hover:bg-[#4F46E5]">
                 <FlightFlyMark className="h-6 w-6 transition-transform group-hover:scale-110" />
               </div>
               <span className="text-xl font-black text-white tracking-tight">
-                FLIGHT<span className="text-[#1E40AF]">FLY</span>
+                FLIGHT<span className="text-[#4F46E5]">FLY</span>
                 <span className="ml-1 inline-block h-2 w-2 rounded-full bg-[#D97706]"></span>
               </span>
-            </a>
+            </Link>
 
             <p className="text-xs text-slate-400 leading-relaxed">
               FlightFly is a premier global corporate travel platform providing executive flight booking, luxury resorts, curated tours, and VIP concierge services.
@@ -70,12 +71,12 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Customer Support</h4>
             <ul className="space-y-2.5 text-xs">
-              <li><a href="#" className="hover:text-white transition-colors">24/7 Concierge Help Center</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Manage Your Reservation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Baggage Allowance Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Comprehensive Travel Insurance</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Visa & Entry Requirements</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Refund & Cancellation Rules</a></li>
+              <li><a href="#app-newsletter" className="hover:text-white transition-colors">24/7 Concierge Help Center</a></li>
+              <li><a href="/dashboard/bookings" className="hover:text-white transition-colors">Manage Your Reservation</a></li>
+              <li><a href="/flights" className="hover:text-white transition-colors">Baggage Allowance Policy</a></li>
+              <li><a href="/packages" className="hover:text-white transition-colors">Comprehensive Travel Insurance</a></li>
+              <li><a href="/visa" className="hover:text-white transition-colors">Visa & Entry Requirements</a></li>
+              <li><a href="/dashboard/bookings" className="hover:text-white transition-colors">Refund & Cancellation Rules</a></li>
             </ul>
           </div>
 
@@ -105,7 +106,7 @@ export function Footer() {
       </div>
 
       {/* Payment Provider & Trust Strip */}
-      <div className="bg-[#090D16] py-6 border-t border-slate-800">
+      <div className="bg-[#0A0A0A] py-6 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           
           <div className="flex items-center gap-6 text-slate-400">
@@ -120,18 +121,18 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-4 text-slate-400">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <span>•</span>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <span>•</span>
-            <a href="#" className="hover:text-white transition-colors">Cookie Settings</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Cookie Settings</a>
           </div>
 
         </div>
       </div>
 
       {/* Bottom Copyright Bar */}
-      <div className="bg-[#05080E] py-4 text-center text-xs text-slate-500">
+      <div className="bg-[#050505] py-4 text-center text-xs text-slate-500">
         <p>© {new Date().getFullYear()} FlightFly Travel Technologies Inc. All rights reserved.</p>
       </div>
 

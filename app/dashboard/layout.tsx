@@ -32,8 +32,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading || !user) {
     return (
-      <div className="flex min-h-svh items-center justify-center bg-[#F8FAFC]">
-        <Spinner className="size-8 text-[#1E40AF]" />
+      <div className="flex min-h-svh items-center justify-center bg-[#FAFAFA]">
+        <Spinner className="size-8 text-[#4F46E5]" />
       </div>
     )
   }

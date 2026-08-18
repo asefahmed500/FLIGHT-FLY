@@ -23,6 +23,13 @@ const KIND_TYPE: Record<CatalogKind, BookingItemType> = {
   promo: "package",
 }
 
+const BREADCRUMB: Partial<Record<CatalogKind, { href: string; label: string }>> = {
+  visa: { href: "/visa", label: "Visa" },
+  ticket: { href: "/tickets", label: "Tickets" },
+  tour: { href: "/tours", label: "Tours" },
+  destination: { href: "/", label: "Destinations" },
+}
+
 const TRUST = [
   { icon: ShieldCheck, label: "Verified & licensed operator" },
   { icon: BadgeCheck, label: "Free cancellation up to 48h" },
@@ -55,9 +62,9 @@ export default function CatalogDetailPage() {
       <PageFrame>
         <div className="flex flex-col items-center gap-4 py-24 text-center">
           <p className="text-5xl">🧭</p>
-          <h1 className="text-2xl font-semibold text-[#0F172A]">This item is no longer available</h1>
+          <h1 className="text-2xl font-semibold text-[#111111]">This item is no longer available</h1>
           <p className="text-sm text-slate-500">It may have sold out or been removed from our catalog.</p>
-          <Button render={<Link href="/" />} className="mt-2 bg-[#0F172A] hover:bg-[#1E40AF]">
+          <Button render={<Link href="/" />} className="mt-2 bg-[#111111] hover:bg-[#4F46E5]">
             Back to Home
           </Button>
         </div>
@@ -94,10 +101,10 @@ export default function CatalogDetailPage() {
       <div className="flex flex-col gap-10">
         {/* Breadcrumb */}
         <nav className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500">
-          <Link href="/" className="hover:text-[#1E40AF]">Home</Link>
+          <Link href="/" className="hover:text-[#4F46E5]">Home</Link>
           <ChevronRight className="h-3 w-3 text-slate-400" />
-          <Link href={`/${item.kind === "ticket" ? "tickets" : item.kind === "tour" ? "tours" : "visa"}`} className="hover:text-[#1E40AF]">
-            {item.kind === "ticket" ? "Tickets" : item.kind === "tour" ? "Tours" : "Visa"}
+          <Link href={BREADCRUMB[item.kind]?.href ?? "/deals"} className="hover:text-[#4F46E5]">
+            {BREADCRUMB[item.kind]?.label ?? "Deals"}
           </Link>
           <ChevronRight className="h-3 w-3 text-slate-400" />
           <span className="max-w-[40ch] truncate text-slate-900">{item.title}</span>
@@ -118,7 +125,7 @@ export default function CatalogDetailPage() {
             <div className="rounded-3xl border border-slate-200/80 bg-white p-7 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-semibold tracking-[-0.01em] text-[#0F172A] sm:text-3xl">{item.title}</h1>
+                  <h1 className="text-2xl font-semibold tracking-[-0.01em] text-[#111111] sm:text-3xl">{item.title}</h1>
                   {item.subtitle && <p className="mt-1 text-sm font-medium text-slate-500">{item.subtitle}</p>}
                 </div>
                 <div className="flex items-center gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-600">
@@ -130,7 +137,7 @@ export default function CatalogDetailPage() {
                 <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
                   {meta.map((m) => (
                     <div key={m.label} className="flex items-center gap-2.5 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
-                      <m.icon className="h-4 w-4 text-[#1E40AF]" />
+                      <m.icon className="h-4 w-4 text-[#4F46E5]" />
                       <div>
                         <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">{m.label}</p>
                         <p className="text-sm font-semibold text-slate-800">{m.value}</p>
@@ -173,7 +180,7 @@ export default function CatalogDetailPage() {
               <div className="flex items-end justify-between">
                 <div>
                   <p className="text-xs font-medium text-slate-400">Starting from</p>
-                  <p className="text-3xl font-semibold text-[#1E40AF]">{item.price}</p>
+                  <p className="text-3xl font-semibold text-[#4F46E5]">{item.price}</p>
                   {item.originalPrice && (
                     <p className="text-sm font-medium text-slate-400 line-through">{item.originalPrice}</p>
                   )}
@@ -186,6 +193,7 @@ export default function CatalogDetailPage() {
               <Button
                 onClick={() =>
                   openBooking({
+                    itemId: item.id,
                     title: item.title,
                     subtitle: item.subtitle,
                     price: item.price,
@@ -195,7 +203,7 @@ export default function CatalogDetailPage() {
                     type,
                   })
                 }
-                className="mt-5 h-12 w-full bg-[#0F172A] text-sm font-semibold hover:bg-[#1E40AF]"
+                className="mt-5 h-12 w-full bg-[#111111] text-sm font-semibold hover:bg-[#4F46E5]"
               >
                 Book Now — Instant Confirmation
               </Button>
@@ -217,8 +225,8 @@ export default function CatalogDetailPage() {
           <section className="mt-4">
             <div className="mb-5 flex items-end justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#1E40AF]">Keep exploring</p>
-                <h2 className="mt-1 text-xl font-semibold text-[#0F172A]">Similar {item.kind === "ticket" ? "tickets" : item.kind === "tour" ? "tours" : "services"}</h2>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#4F46E5]">Keep exploring</p>
+                <h2 className="mt-1 text-xl font-semibold text-[#111111]">Similar {item.kind === "ticket" ? "tickets" : item.kind === "tour" ? "tours" : "services"}</h2>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

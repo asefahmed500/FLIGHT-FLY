@@ -29,7 +29,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased scroll-smooth", inter.variable, "font-sans")}
     >
-      <body className="min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-[#1E40AF] selection:text-white">
+      <body className="min-h-screen bg-[#FAFAFA] text-[#111111] selection:bg-[#4F46E5] selection:text-white">
         <AuthProvider>
           <ThemeProvider>
             <TooltipProvider>

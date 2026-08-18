@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Bell, CheckCheck } from "lucide-react"
+import { Bell, Check, CheckCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -28,6 +28,7 @@ export function NotificationBell() {
   const { user } = useAuth()
   const { notifications, unreadCount, refresh } = useNotifications(user)
   const [marking, setMarking] = useState(false)
+  const [markingId, setMarkingId] = useState<string | null>(null)
 
   const markAll = async () => {
     if (!user || marking || unreadCount === 0) return
@@ -37,6 +38,17 @@ export function NotificationBell() {
       refresh()
     } finally {
       setMarking(false)
+    }
+  }
+
+  const markOne = async (id: string) => {
+    if (!user || markingId) return
+    setMarkingId(id)
+    try {
+      await markNotificationsRead(user, false, id)
+      refresh()
+    } finally {
+      setMarkingId(null)
     }
   }
 
@@ -68,7 +80,7 @@ export function NotificationBell() {
                 markAll()
               }}
               disabled={marking}
-              className="flex items-center gap-1 text-[11px] font-medium text-[#1E40AF] hover:underline disabled:opacity-50"
+              className="flex items-center gap-1 text-[11px] font-medium text-[#4F46E5] hover:underline disabled:opacity-50"
             >
               <CheckCheck className="size-3" /> Mark all read
             </button>
@@ -90,10 +102,25 @@ export function NotificationBell() {
                 )}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <p className={cn("text-xs leading-snug", n.read ? "font-medium text-slate-700" : "font-semibold text-[#0F172A]")}>
+                  <p className={cn("text-xs leading-snug", n.read ? "font-medium text-slate-700" : "font-semibold text-[#111111]")}>
                     {n.title}
                   </p>
-                  <span className="shrink-0 text-[10px] text-slate-400">{timeAgo(n.createdAt)}</span>
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <span className="text-[10px] text-slate-400">{timeAgo(n.createdAt)}</span>
+                    {!n.read && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          markOne(n.id)
+                        }}
+                        disabled={markingId === n.id}
+                        aria-label="Mark as read"
+                        className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-[#4F46E5] disabled:opacity-50"
+                      >
+                        <Check className="size-3" />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p className="mt-0.5 text-[11px] leading-snug text-slate-500">{n.body}</p>
               </div>
