@@ -7,22 +7,73 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useAuth } from "@/lib/auth-context"
-import { Plane, Globe, ChevronDown, Menu, User, PhoneCall, Sparkles, ShieldCheck, LayoutDashboard, LogOut } from "lucide-react"
+import { Plane, Globe, ChevronDown, Menu, User, PhoneCall, Sparkles, ShieldCheck, LayoutDashboard, LogOut, ChevronRight } from "lucide-react"
 import { FlightFlyMark } from "@/components/icons"
 
-const NAV_LINKS = [
-  { label: "Flights", href: "/flights" },
-  { label: "Hotels", href: "/hotels" },
-  { label: "Tours", href: "/tours" },
-  { label: "Packages", href: "/packages" },
-  { label: "Visa", href: "/visa" },
-  { label: "Tickets", href: "/tickets" },
-  { label: "Deals", href: "/deals", hot: true },
+interface NavChild {
+  label: string
+  desc?: string
+  href: string
+}
+
+interface NavItem {
+  label: string
+  href?: string
+  hot?: boolean
+  children?: NavChild[]
+}
+
+const NAV_LINKS: NavItem[] = [
+  {
+    label: "Flights",
+    children: [
+      { label: "Business & First Class", desc: "Executive cabins with lounge access", href: "/flights/business-first" },
+      { label: "Economy Deals", desc: "Best-value fares across 500+ carriers", href: "/flights/economy-deals" },
+      { label: "Private Charter", desc: "By-the-hour private jet hire", href: "/flights/private-charter" },
+    ],
+  },
+  {
+    label: "Hotels",
+    children: [
+      { label: "Luxury Resorts", desc: "5-star beachfront escapes", href: "/hotels/luxury-resorts" },
+      { label: "Boutique Stays", desc: "Design-forward hideaways", href: "/hotels/boutique-stays" },
+      { label: "Corporate Suites", desc: "City-center executive rooms", href: "/hotels/corporate-suites" },
+    ],
+  },
+  {
+    label: "Tours & Tickets",
+    children: [
+      { label: "Trending Tours", desc: "Handpicked guided experiences", href: "/tours/trending" },
+      { label: "Group & Escorted", desc: "Shared and private group trips", href: "/tours/group-escorted" },
+      { label: "Cultural & Heritage", desc: "History-rich destination tours", href: "/tours/cultural-heritage" },
+      { label: "Concerts & Events", desc: "Front-row and VIP seats", href: "/tickets/concerts-events" },
+      { label: "Attractions & Parks", desc: "Skip-the-line entry passes", href: "/tickets/attractions-parks" },
+      { label: "Experiences", desc: "Dining, cruises & adventures", href: "/tickets/experiences" },
+    ],
+  },
+  {
+    label: "More",
+    children: [
+      { label: "Holiday Packages", desc: "Curated multi-city itineraries", href: "/packages" },
+      { label: "Visa Services", desc: "Visa assistance & requirements", href: "/visa" },
+      { label: "Flash Deals", desc: "Limited-time discounted fares", href: "/deals" },
+      { label: "Manage Reservation", desc: "View or cancel your bookings", href: "/dashboard/bookings" },
+      { label: "VIP Newsletter", desc: "Flash deals & welcome codes", href: "/#app-newsletter" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+    ],
+  },
 ]
 
 function isLinkActive(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/"
-  return pathname === href || pathname.startsWith(`${href}/`)
+  const clean = href.split("?")[0].split("#")[0]
+  if (clean === "/") return pathname === "/"
+  return pathname === clean || pathname.startsWith(`${clean}/`)
+}
+
+function groupActive(pathname: string, item: NavItem): boolean {
+  if (!item.children) return isLinkActive(pathname, item.href || "/")
+  return item.children.some((c) => isLinkActive(pathname, c.href))
 }
 
 export function Navbar() {
@@ -115,24 +166,49 @@ export function Navbar() {
             </Link>
 
             {/* Main Menu Links (visible from md) */}
-            <nav className="hidden items-center gap-1 overflow-x-auto whitespace-nowrap md:flex md:flex-1 md:justify-center lg:gap-5">
+            <nav className="hidden items-center gap-0.5 md:flex md:flex-1 md:justify-center lg:gap-2">
               {NAV_LINKS.map((link) => {
-                const isActive = isLinkActive(pathname, link.href)
+                const isActive = groupActive(pathname, link)
                 return (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className={`u-draw px-2.5 py-2 text-[12.5px] font-medium transition-colors lg:text-sm ${
-                      isActive ? "text-[#4F46E5]" : "text-[#111111] hover:text-[#4F46E5]"
-                    }`}
-                  >
-                    {link.label}
-                    {link.hot && (
-                      <span className="ml-1 rounded-full border border-amber-200 bg-amber-100 px-1.5 py-0.5 text-[9px] font-semibold text-[#D97706]">
-                        HOT
+                  <DropdownMenu key={link.label}>
+                    <DropdownMenuTrigger>
+                      <span
+                        className={`u-draw flex items-center gap-1 px-2.5 py-2 text-[12.5px] font-medium transition-colors lg:text-sm ${
+                          isActive ? "text-[#4F46E5]" : "text-[#111111] hover:text-[#4F46E5]"
+                        }`}
+                      >
+                        {link.label}
+                        <ChevronDown className="h-3 w-3 text-slate-400" />
                       </span>
-                    )}
-                  </Link>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" className="min-w-64 p-1.5">
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel className="px-2 py-1 text-xs font-semibold text-slate-500">
+                          {link.label}
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator className="bg-slate-100" />
+                        {link.children!.map((child) => (
+                          <DropdownMenuItem
+                            key={child.href}
+                            render={<Link href={child.href} />}
+                            className={`cursor-pointer rounded-md px-2 py-2 text-slate-700 hover:bg-slate-50 hover:text-[#4F46E5] ${
+                              isLinkActive(pathname, child.href) ? "text-[#4F46E5]" : ""
+                            }`}
+                          >
+                            <div className="flex flex-col">
+                              <span className="flex items-center gap-1.5 text-[13px] font-medium">
+                                {child.label}
+                                <ChevronRight className="h-3 w-3 text-slate-300" />
+                              </span>
+                              {child.desc && (
+                                <span className="text-[11px] font-normal text-slate-400">{child.desc}</span>
+                              )}
+                            </div>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )
               })}
             </nav>
@@ -172,18 +248,27 @@ export function Navbar() {
                       </SheetTitle>
                     </SheetHeader>
 
-                    <nav className="flex flex-col gap-4 text-base font-medium text-[#111111]">
+                    <nav className="flex flex-col gap-1 text-base font-medium text-[#111111]">
                       {NAV_LINKS.map((link) => (
-                        <Link
-                          key={link.label}
-                          href={link.href}
-                          className={`flex items-center justify-between border-b border-slate-100 py-2 transition-colors hover:text-[#4F46E5] ${
-                            isLinkActive(pathname, link.href) ? "text-[#4F46E5]" : ""
-                          }`}
-                        >
-                          {link.label}
-                          {link.hot && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-[#D97706]">HOT</span>}
-                        </Link>
+                        <div key={link.label} className="border-b border-slate-100 py-2">
+                          <p className="flex items-center gap-1.5 px-1 py-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+                            {link.label}
+                          </p>
+                          <div className="mt-1 flex flex-col">
+                            {link.children!.map((child) => (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                className={`flex items-center justify-between px-1 py-2 pl-3 transition-colors hover:text-[#4F46E5] ${
+                                  isLinkActive(pathname, child.href) ? "text-[#4F46E5]" : "text-[#111111]"
+                                }`}
+                              >
+                                <span className="text-sm">{child.label}</span>
+                                <ChevronRight className="h-3.5 w-3.5 text-slate-300" />
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </nav>
                   </div>

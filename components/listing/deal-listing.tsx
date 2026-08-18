@@ -19,6 +19,7 @@ interface DealListingProps {
   description: string
   icon: React.ComponentType<{ className?: string }>
   accent?: "blue" | "amber"
+  initialQuery?: string
 }
 
 const CATEGORY_TYPE: Record<DealCategory, BookingItemType> = {
@@ -30,14 +31,15 @@ const CATEGORY_TYPE: Record<DealCategory, BookingItemType> = {
   tickets: "ticket",
 }
 
-function DealListingInner({ category, eyebrow, title, description, icon: Icon, accent = "blue" }: DealListingProps) {
+function DealListingInner({ category, eyebrow, title, description, icon: Icon, accent = "blue", initialQuery }: DealListingProps) {
   const { deals, loading } = useDeals()
   const searchParams = useSearchParams()
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState(initialQuery ?? "")
   const [sort, setSort] = useState("popular")
   const [searchMeta, setSearchMeta] = useState<{ from?: string; to?: string; q?: string; checkin?: string; checkout?: string } | null>(null)
 
   // Consume hero-search params (q/from/to/checkin/checkout) once on mount.
+  // A `q` param from the URL wins over the page's initialQuery.
   useEffect(() => {
     const t = setTimeout(() => {
       const q = searchParams.get("q") ?? ""
@@ -77,9 +79,9 @@ function DealListingInner({ category, eyebrow, title, description, icon: Icon, a
         const hay = `${d.title} ${d.subtitle} ${d.badge}`.toLowerCase()
         return hay.includes(q) || tokens.some((t) => hay.includes(t))
       })
-      // Graceful hero-search handoff: if the searched route/destination has
-      // no exact deals, show everything rather than an empty wall.
-      if (data.length === 0 && searchMeta) {
+      // Graceful handoff: if the searched route/destination (or the page's
+      // initialQuery) has no exact deals, show everything rather than an empty wall.
+      if (data.length === 0 && (searchMeta || initialQuery)) {
         data = live.map((deal) => ({
           id: deal.id,
           title: deal.title,
