@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plane, Building2, Compass, Package, Car, Ship, Sparkles } from "lucide-react"
+import { GlareCard } from "@/components/listing/glare-card"
+import { LiftGrid } from "@/components/listing/lift-grid"
 
 const CATEGORIES = [
   {
@@ -72,33 +74,35 @@ export function CategoryCards() {
           </div>
         </div>
 
-        {/* 6 Minimal Category Cards — 1:1 squares, one row */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
+        {/* 6 Minimal Category Cards — 1:1 squares, one row, 3D lift + cursor glare */}
+        <LiftGrid columns={6} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
           {CATEGORIES.map((cat) => {
             const IconComponent = cat.icon
             return (
-              <Link key={cat.id} href={cat.href} className="group block">
-                <Card className="group/card relative aspect-square overflow-hidden rounded-xl bg-[#111111] p-0 text-white shadow-md transition-all duration-200 hover:shadow-2xl">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-200 group-hover/card:scale-110"
-                    style={{ backgroundImage: `url('${cat.bgImage}')` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/60 to-black/20" />
+              <Link key={cat.id} href={cat.href} className="group block h-full">
+                <GlareCard className="h-full rounded-xl">
+                  <Card className="group/card relative aspect-square overflow-hidden rounded-xl bg-[#111111] p-0 text-white shadow-md transition-shadow duration-200 hover:shadow-2xl">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-200 group-hover/card:scale-110"
+                      style={{ backgroundImage: `url('${cat.bgImage}')` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/60 to-black/20" />
 
-                  <CardContent className="relative z-10 flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/15 shadow-md backdrop-blur-md transition-colors group-hover/card:border-amber-500 group-hover/card:bg-amber-500">
-                      <IconComponent className="h-5 w-5 text-amber-300 transition-colors group-hover/card:text-white" />
-                    </div>
-                    <h3 className="text-sm font-semibold leading-tight tracking-[-0.01em] text-white">
-                      {cat.title}
-                    </h3>
-                    <p className="text-xs font-semibold text-amber-400">{cat.price}</p>
-                  </CardContent>
-                </Card>
+                    <CardContent className="relative z-10 flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/15 shadow-md backdrop-blur-md transition-colors group-hover/card:border-amber-500 group-hover/card:bg-amber-500">
+                        <IconComponent className="h-5 w-5 text-amber-300 transition-colors group-hover/card:text-white" />
+                      </div>
+                      <h3 className="text-sm font-semibold leading-tight tracking-[-0.01em] text-white">
+                        {cat.title}
+                      </h3>
+                      <p className="text-xs font-semibold text-amber-400">{cat.price}</p>
+                    </CardContent>
+                  </Card>
+                </GlareCard>
               </Link>
             )
           })}
-        </div>
+        </LiftGrid>
 
       </div>
     </section>

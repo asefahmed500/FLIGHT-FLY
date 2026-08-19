@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Compass, Gem, TicketCheck, Crown } from "lucide-react"
+import { GlareCard } from "@/components/listing/glare-card"
 
 interface Step {
   id: string
@@ -131,10 +132,10 @@ export function ScrollytellingSection() {
                   const isDone = i < activeIndex
                   const Icon = step.icon
                   return (
+                    <GlareCard key={step.id} className="rounded-xl" glareColor="rgba(251, 191, 36, 0.25)">
                     <button
-                      key={step.id}
                       onClick={() => jumpToStep(i)}
-                      className={`group flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
+                      className={`group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
                         isActive
                           ? "border-amber-400/50 bg-amber-400/10"
                           : "border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/10"
@@ -164,6 +165,7 @@ export function ScrollytellingSection() {
                         </span>
                       </span>
                     </button>
+                    </GlareCard>
                   )
                 })}
 

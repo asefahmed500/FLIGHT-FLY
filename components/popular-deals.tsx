@@ -14,6 +14,7 @@ import { useMyFavorites, toggleFavorite } from "@/lib/app-data"
 import { useAuth } from "@/lib/auth-context"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
+import { TiltCard } from "@/components/listing/tilt-card"
 import type { BookingItemInfo } from "@/lib/stores/booking-store"
 import type { BookingItemType } from "@/lib/types"
 
@@ -68,13 +69,13 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
           {/* Filter Tabs */}
           <div className="mt-4 md:mt-0">
             <Tabs defaultValue="all" value={filter} onValueChange={setFilter} className="w-auto">
-              <TabsList className="flex-wrap bg-slate-200/70 p-1 rounded-xl">
-                <TabsTrigger value="all" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">All Deals</TabsTrigger>
-                <TabsTrigger value="flights" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Flights</TabsTrigger>
-                <TabsTrigger value="hotels" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Hotels</TabsTrigger>
-                <TabsTrigger value="packages" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Packages</TabsTrigger>
-                <TabsTrigger value="visa" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Visa</TabsTrigger>
-                <TabsTrigger value="tickets" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111]">Tickets</TabsTrigger>
+              <TabsList className="flex-nowrap overflow-x-auto bg-slate-200/70 p-1 rounded-xl whitespace-nowrap no-scrollbar">
+                <TabsTrigger value="all" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">All Deals</TabsTrigger>
+                <TabsTrigger value="flights" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Flights</TabsTrigger>
+                <TabsTrigger value="hotels" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Hotels</TabsTrigger>
+                <TabsTrigger value="packages" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Packages</TabsTrigger>
+                <TabsTrigger value="visa" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Visa</TabsTrigger>
+                <TabsTrigger value="tickets" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Tickets</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -103,9 +104,10 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             {filteredDeals.map((deal, i) => (
             <Reveal key={deal.id} variant="scale" delay={(i % 3) * 80} className="h-full">
+            <TiltCard className="h-full">
             <Card className="rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden bg-white group flex flex-col justify-between">
 
               
@@ -174,6 +176,7 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
               </CardContent>
 
             </Card>
+            </TiltCard>
             </Reveal>
           ))}
           </div>
