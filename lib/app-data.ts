@@ -43,12 +43,14 @@ async function api<T>(path: string, user: User | null | undefined, init?: Reques
 function useAppFetch<T>(user: User | null | undefined, path: string | null, refreshKey: number) {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!path) {
       const t = setTimeout(() => {
         setData(null)
         setLoading(false)
+        setError(null)
       }, 0)
       return () => clearTimeout(t)
     }
@@ -56,10 +58,16 @@ function useAppFetch<T>(user: User | null | undefined, path: string | null, refr
     const t = setTimeout(() => setLoading(true), 0)
     api<T>(path, user)
       .then((d) => {
-        if (active) setData(d)
+        if (active) {
+          setData(d)
+          setError(null)
+        }
       })
-      .catch(() => {
-        if (active) setData(null)
+      .catch((err: unknown) => {
+        if (active) {
+          setData(null)
+          setError(err instanceof Error ? err.message : "Something went wrong.")
+        }
       })
       .finally(() => {
         if (active) setLoading(false)
@@ -70,23 +78,23 @@ function useAppFetch<T>(user: User | null | undefined, path: string | null, refr
     }
   }, [path, refreshKey, user, user?.uid])
 
-  return { data, loading }
+  return { data, loading, error }
 }
 
 export function useMyBookings(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { data, loading } = useAppFetch<Booking[]>(
+  const { data, loading, error } = useAppFetch<Booking[]>(
     user,
     user ? `/api/bookings?userId=${user.uid}` : null,
     refreshKey
   )
-  return { bookings: data ?? [], loading, refresh: () => setRefreshKey((k) => k + 1) }
+  return { bookings: data ?? [], loading, error, refresh: () => setRefreshKey((k) => k + 1) }
 }
 
 export function useAllBookings(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
   const [page, setPage] = useState(1)
-  const { data, loading } = useAppFetch<{ items: Booking[]; total: number }>(
+  const { data, loading, error } = useAppFetch<{ items: Booking[]; total: number }>(
     user,
     user ? `/api/bookings?page=${page}&take=25` : null,
     refreshKey
@@ -97,25 +105,26 @@ export function useAllBookings(user: User | null | undefined) {
     page,
     setPage,
     loading,
+    error,
     refresh: () => setRefreshKey((k) => k + 1),
   }
 }
 
 export function useUsers(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { data, loading } = useAppFetch<AppUser[]>(user, user ? "/api/users" : null, refreshKey)
-  return { users: data ?? [], loading, refresh: () => setRefreshKey((k) => k + 1) }
+  const { data, loading, error } = useAppFetch<AppUser[]>(user, user ? "/api/users" : null, refreshKey)
+  return { users: data ?? [], loading, error, refresh: () => setRefreshKey((k) => k + 1) }
 }
 
 export function useMyFavorites(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { data, loading } = useAppFetch<FavoriteItem[]>(user, user ? "/api/favorites" : null, refreshKey)
-  return { favorites: data ?? [], loading, refresh: () => setRefreshKey((k) => k + 1) }
+  const { data, loading, error } = useAppFetch<FavoriteItem[]>(user, user ? "/api/favorites" : null, refreshKey)
+  return { favorites: data ?? [], loading, error, refresh: () => setRefreshKey((k) => k + 1) }
 }
 
 export function useNotifications(user: User | null | undefined) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { data, loading } = useAppFetch<{ items: AppNotification[]; unreadCount: number }>(
+  const { data, loading, error } = useAppFetch<{ items: AppNotification[]; unreadCount: number }>(
     user,
     user ? "/api/notifications" : null,
     refreshKey
@@ -124,6 +133,7 @@ export function useNotifications(user: User | null | undefined) {
     notifications: data?.items ?? [],
     unreadCount: data?.unreadCount ?? 0,
     loading,
+    error,
     refresh: () => setRefreshKey((k) => k + 1),
   }
 }

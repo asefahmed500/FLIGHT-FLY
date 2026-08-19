@@ -1,6 +1,6 @@
 "use client"
 
-import { ShieldCheck, PhoneCall, Mail, MapPin, Globe, CreditCard, Lock } from "lucide-react"
+import { ShieldCheck, PhoneCall, Mail, MapPin, Lock } from "lucide-react"
 import Link from "next/link"
 import { FlightFlyMark } from "@/components/icons"
 
@@ -45,12 +45,12 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Top Destinations</h4>
             <ul className="space-y-2.5 text-xs">
-              <li><a href="#featured-destinations" className="hover:text-white transition-colors">Flights to Paris</a></li>
-              <li><a href="#featured-destinations" className="hover:text-white transition-colors">Luxury Resorts in Bali</a></li>
-              <li><a href="#featured-destinations" className="hover:text-white transition-colors">Dubai 5-Star Hotels</a></li>
-              <li><a href="#featured-destinations" className="hover:text-white transition-colors">First Class to Tokyo</a></li>
-              <li><a href="#featured-destinations" className="hover:text-white transition-colors">New York Executive Suites</a></li>
-              <li><a href="#featured-destinations" className="hover:text-white transition-colors">Maldives Overwater Villas</a></li>
+              <li><Link href="/flights" className="hover:text-white transition-colors">Business &amp; First Class Flights</Link></li>
+              <li><Link href="/hotels/luxury-resorts" className="hover:text-white transition-colors">Luxury Resorts in Bali</Link></li>
+              <li><Link href="/hotels" className="hover:text-white transition-colors">Dubai 5-Star Hotels</Link></li>
+              <li><Link href="/flights/business-first" className="hover:text-white transition-colors">First Class to Tokyo</Link></li>
+              <li><Link href="/hotels/corporate-suites" className="hover:text-white transition-colors">New York Executive Suites</Link></li>
+              <li><Link href="/packages" className="hover:text-white transition-colors">Maldives Overwater Villas</Link></li>
             </ul>
           </div>
 
@@ -58,12 +58,12 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Travel Services</h4>
             <ul className="space-y-2.5 text-xs">
-              <li><a href="#hero-search" className="hover:text-white transition-colors">Business & First Class Flights</a></li>
-              <li><a href="#hero-search" className="hover:text-white transition-colors">Boutique & Luxury Stays</a></li>
-              <li><a href="#hero-search" className="hover:text-white transition-colors">Private Helicopter & Yacht Charter</a></li>
-              <li><a href="#hero-search" className="hover:text-white transition-colors">Corporate Travel Management</a></li>
-              <li><a href="#hero-search" className="hover:text-white transition-colors">Group & Event Booking</a></li>
-              <li><a href="#hero-search" className="hover:text-white transition-colors">Executive Loyalty Program</a></li>
+              <li><Link href="/flights/private-charter" className="hover:text-white transition-colors">Private Helicopter &amp; Yacht Charter</Link></li>
+              <li><Link href="/hotels/boutique-stays" className="hover:text-white transition-colors">Boutique &amp; Luxury Stays</Link></li>
+              <li><Link href="/flights/business-first" className="hover:text-white transition-colors">Executive Cabin Bookings</Link></li>
+              <li><Link href="/tours/group-escorted" className="hover:text-white transition-colors">Group &amp; Event Booking</Link></li>
+              <li><Link href="/deals" className="hover:text-white transition-colors">Flash Deals &amp; Offers</Link></li>
+              <li><Link href="/#app-newsletter" className="hover:text-white transition-colors">VIP Travel Digest</Link></li>
             </ul>
           </div>
 
@@ -71,12 +71,12 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Customer Support</h4>
             <ul className="space-y-2.5 text-xs">
-              <li><a href="#app-newsletter" className="hover:text-white transition-colors">24/7 Concierge Help Center</a></li>
-              <li><a href="/dashboard/bookings" className="hover:text-white transition-colors">Manage Your Reservation</a></li>
-              <li><a href="/flights" className="hover:text-white transition-colors">Baggage Allowance Policy</a></li>
-              <li><a href="/packages" className="hover:text-white transition-colors">Comprehensive Travel Insurance</a></li>
-              <li><a href="/visa" className="hover:text-white transition-colors">Visa & Entry Requirements</a></li>
-              <li><a href="/dashboard/bookings" className="hover:text-white transition-colors">Refund & Cancellation Rules</a></li>
+              <li><Link href="/dashboard/bookings" className="hover:text-white transition-colors">Manage Your Reservation</Link></li>
+              <li><Link href="/dashboard/bookings" className="hover:text-white transition-colors">Refund &amp; Cancellation Status</Link></li>
+              <li><Link href="/visa" className="hover:text-white transition-colors">Visa &amp; Entry Requirements</Link></li>
+              <li><Link href="/packages" className="hover:text-white transition-colors">Holiday Packages &amp; Insurance-Backed Trips</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors">Booking Terms &amp; Conditions</Link></li>
+              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy &amp; Data Protection</Link></li>
             </ul>
           </div>
 

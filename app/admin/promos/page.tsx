@@ -38,6 +38,7 @@ export default function AdminPromosPage() {
   const [code, setCode] = useState("")
   const [percent, setPercent] = useState("10")
   const [description, setDescription] = useState("")
+  const [expiresAt, setExpiresAt] = useState("")
 
   const load = useCallback(async () => {
     if (!user) return
@@ -72,11 +73,17 @@ export default function AdminPromosPage() {
     try {
       await api("/api/promos", user, {
         method: "POST",
-        body: JSON.stringify({ code: code.trim().toUpperCase(), percentOff: percentNum, description: description.trim() || null }),
+        body: JSON.stringify({
+          code: code.trim().toUpperCase(),
+          percentOff: percentNum,
+          description: description.trim() || null,
+          expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+        }),
       })
       setCode("")
       setPercent("10")
       setDescription("")
+      setExpiresAt("")
       await load()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create promo.")
@@ -151,6 +158,18 @@ export default function AdminPromosPage() {
                 />
               </Field>
             </div>
+            <Field className="mt-4 max-w-sm">
+              <FieldLabel htmlFor="promo-expires">Expires (optional)</FieldLabel>
+              <Input
+                id="promo-expires"
+                type="datetime-local"
+                value={expiresAt}
+                onChange={(e) => setExpiresAt(e.target.value)}
+              />
+              <FieldDescription>
+                Leave blank for no expiry. The homepage banner countdown only shows when a code has one.
+              </FieldDescription>
+            </Field>
           </FieldGroup>
           <Button onClick={create} disabled={creating || !code.trim()} className="mt-4 bg-[#4F46E5] hover:bg-[#111111]">
             {creating ? (
@@ -189,6 +208,7 @@ export default function AdminPromosPage() {
                   <TableHead>Code</TableHead>
                   <TableHead>Discount</TableHead>
                   <TableHead>Description</TableHead>
+                  <TableHead>Expires</TableHead>
                   <TableHead className="text-right">Used</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
@@ -200,6 +220,13 @@ export default function AdminPromosPage() {
                     <TableCell className="font-semibold text-emerald-600">-{p.percentOff}%</TableCell>
                     <TableCell className="max-w-[24ch] truncate text-xs text-muted-foreground">
                       {p.description ?? "—"}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {p.expiresAt
+                        ? p.expiresAt < new Date().toISOString()
+                          ? <span className="font-medium text-rose-600">Expired</span>
+                          : new Date(p.expiresAt).toLocaleDateString()
+                        : "Never"}
                     </TableCell>
                     <TableCell className="text-right text-xs text-muted-foreground">{p.usageCount}×</TableCell>
                     <TableCell>

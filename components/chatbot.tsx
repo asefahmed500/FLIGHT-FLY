@@ -120,7 +120,7 @@ export function Chatbot() {
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold leading-tight">Fly — FlightFly Concierge</p>
               <p className="flex items-center gap-1 text-[10px] text-emerald-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Online 24/7
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Instant FAQ assistant
               </p>
             </div>
             <Sparkles className="h-4 w-4 text-amber-400" />

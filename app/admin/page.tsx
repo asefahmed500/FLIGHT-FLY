@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { StatCard } from "@/components/stat-card"
+import { DataErrorBanner } from "@/components/data-error-banner"
 import { DollarSign, FileText, Users, ShieldCheck, ArrowRight } from "lucide-react"
 import { useAllBookings, useUsers } from "@/lib/app-data"
 import { useAuth } from "@/lib/auth-context"
@@ -57,7 +58,7 @@ function gross(b: Booking): number {
 
 export default function AdminOverviewPage() {
   const { user } = useAuth()
-  const { bookings, loading } = useAllBookings(user)
+  const { bookings, loading, error, refresh } = useAllBookings(user)
   const { users, loading: usersLoading } = useUsers(user)
 
   const approved = bookings.filter((b) => b.status === "approved")
@@ -82,6 +83,8 @@ export default function AdminOverviewPage() {
         <h1 className="text-2xl font-semibold tracking-[-0.01em]">Executive Travel Control Center</h1>
         <p className="text-sm text-muted-foreground">Role-based dashboard secured by PostgreSQL + admin allowlist.</p>
       </div>
+
+      <DataErrorBanner error={error} onRetry={refresh} context="revenue analytics" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard

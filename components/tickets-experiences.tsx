@@ -3,10 +3,9 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Ticket, Star, ArrowRight } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Ticket } from "lucide-react"
 import type { BookingItemInfo } from "@/lib/stores/booking-store"
-import type { BookingItemType } from "@/lib/types"
 import { useCatalog } from "@/lib/firestore-data"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
@@ -16,51 +15,9 @@ interface TicketsExperiencesProps {
   onBookItem: (item: BookingItemInfo) => void
 }
 
-const TICKETS = [
-  {
-    id: "ticket-burj",
-    title: "Burj Khalifa At The Top Sky",
-    subtitle: "Level 148 sunset access with lounge & refreshments",
-    price: "$135",
-    originalPrice: "$170",
-    deal: true,
-    badge: "LEVEL 148",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "ticket-cirque",
-    title: "Cirque du Soleil Premium Seats",
-    subtitle: "Reserved club section with backstage meet & greet",
-    price: "$210",
-    badge: "FRONT ROW",
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "ticket-opera",
-    title: "Sydney Opera House Gala Night",
-    subtitle: "Orchestra stalls with interval champagne service",
-    price: "$180",
-    badge: "VIP ORCHESTRA",
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1541506491-6506b79e2c3c?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "ticket-cruise",
-    title: "Monaco Grand Prix Yacht Spectator",
-    subtitle: "Trackside yacht viewing platform with hosted bar",
-    price: "$1,450",
-    badge: "YACHT PASS",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1506029642148-0c0d40b08579?q=80&w=800&auto=format&fit=crop",
-  },
-]
-
 export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
-  const { catalog } = useCatalog()
-  const live = catalog.filter((item) => item.kind === "ticket")
-  const tickets = live.length > 0 ? live : TICKETS
+  const { catalog, loading } = useCatalog()
+  const tickets = catalog.filter((item) => item.kind === "ticket")
 
   return (
     <section id="tickets-experiences" className="bg-white py-24">
@@ -77,8 +34,15 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
-          {tickets.map((ticket, i) => (
+        {loading ? (
+          <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-80 rounded-xl" />
+            ))}
+          </div>
+        ) : tickets.length === 0 ? null : (
+          <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
+            {tickets.map((ticket, i) => (
             <Reveal key={ticket.id} variant="scale" delay={i * 80}>
               <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-xl">
                 <div className="relative h-44 overflow-hidden">
@@ -116,7 +80,8 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
               </Card>
             </Reveal>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   )

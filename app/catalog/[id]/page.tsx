@@ -61,7 +61,7 @@ export default function CatalogDetailPage() {
     return (
       <PageFrame>
         <div className="flex flex-col items-center gap-4 py-24 text-center">
-          <p className="text-5xl">🧭</p>
+          <p className="text-5xl" aria-hidden="true">🧭</p>
           <h1 className="text-2xl font-semibold text-[#111111]">This item is no longer available</h1>
           <p className="text-sm text-slate-500">It may have sold out or been removed from our catalog.</p>
           <Button render={<Link href="/" />} className="mt-2 bg-[#111111] hover:bg-[#4F46E5]">
@@ -175,7 +175,7 @@ export default function CatalogDetailPage() {
           </div>
 
           {/* Sticky booking card */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="lg:sticky lg:top-32 lg:self-start">
             <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-lg shadow-slate-900/5">
               <div className="flex items-end justify-between">
                 <div>

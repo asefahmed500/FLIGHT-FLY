@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { StatCard } from "@/components/stat-card"
+import { DataErrorBanner } from "@/components/data-error-banner"
 import { Ticket, Sparkles, ShieldCheck, ArrowRight, Plane } from "lucide-react"
 import { FlightFlyMark } from "@/components/icons"
 
@@ -20,7 +21,7 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function DashboardOverviewPage() {
   const { user, profile, role } = useAuth()
-  const { bookings, loading } = useMyBookings(user)
+  const { bookings, loading, error, refresh } = useMyBookings(user)
 
   const activeBookings = bookings.filter((b) => b.status !== "cancelled")
   const confirmed = bookings.filter((b) => b.status === "approved").length
@@ -36,6 +37,8 @@ export default function DashboardOverviewPage() {
           {role === "admin" ? "Executive access active." : "Your VIP travel dashboard."}
         </p>
       </div>
+
+      <DataErrorBanner error={error} onRetry={refresh} context="your reservations" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard

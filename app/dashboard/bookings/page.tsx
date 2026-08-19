@@ -21,6 +21,7 @@ import {
 import { Download, Ticket, XCircle, Loader2 } from "lucide-react"
 import { downloadETicket } from "@/lib/e-ticket"
 import { useToastStore } from "@/lib/stores/toast-store"
+import { DataErrorBanner } from "@/components/data-error-banner"
 import type { Booking } from "@/lib/types"
 
 const STATUS_STYLES: Record<string, string> = {
@@ -90,7 +91,7 @@ function CancelButton({ booking, onDone }: { booking: Booking; onDone: () => voi
 
 export default function DashboardBookingsPage() {
   const { user } = useAuth()
-  const { bookings, loading, refresh } = useMyBookings(user)
+  const { bookings, loading, error, refresh } = useMyBookings(user)
 
   return (
     <div className="flex flex-col gap-6">
@@ -98,6 +99,8 @@ export default function DashboardBookingsPage() {
         <h1 className="text-2xl font-semibold tracking-[-0.01em]">My Reservations</h1>
         <p className="text-sm text-muted-foreground">Bookings synced from PostgreSQL in real time.</p>
       </div>
+
+      <DataErrorBanner error={error} onRetry={refresh} context="your reservations" />
 
       {loading ? (
         <div className="flex flex-col gap-4">

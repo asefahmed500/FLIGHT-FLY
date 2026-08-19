@@ -7,6 +7,27 @@ export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
 export async function GET(req: Request) {
+  // Public mode: the landing promo banner advertises one active promo.
+  // Exposes only what the banner already shouts from the rooftops — the code
+  // and its discount — with no auth required.
+  if (new URL(req.url).searchParams.get("featured") === "1") {
+    const rows = await db.promoCode.findMany({
+      where: { active: true, percentOff: { gte: 1, lte: 90 } },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    })
+    const now = Date.now()
+    const live = rows.find((p) => !p.expiresAt || p.expiresAt.getTime() > now) ?? null
+    if (!live) return NextResponse.json({ promo: null })
+    return NextResponse.json({
+      promo: {
+        code: live.code,
+        percentOff: live.percentOff,
+        expiresAt: live.expiresAt ? live.expiresAt.toISOString() : null,
+      },
+    })
+  }
+
   const identity = await verifyIdToken(bearerToken(req))
   if (!identity) return NextResponse.json({ error: "Unauthorized." }, { status: 401 })
 

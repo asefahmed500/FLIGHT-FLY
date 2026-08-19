@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { downloadETicket } from "@/lib/e-ticket"
 import { FlightFlyMark } from "@/components/icons"
+import { DataErrorBanner } from "@/components/data-error-banner"
 import { Plane, CalendarDays, Users, Armchair, Download, ScanLine } from "lucide-react"
 import Link from "next/link"
 import type { Booking } from "@/lib/types"
@@ -128,7 +129,7 @@ function PassCard({ pass, email }: { pass: Booking; email?: string | null }) {
 
 export default function DashboardPassesPage() {
   const { user } = useAuth()
-  const { bookings, loading } = useMyBookings(user)
+  const { bookings, loading, error, refresh } = useMyBookings(user)
 
   const passes = bookings.filter((b) => b.status === "approved")
 
@@ -138,6 +139,8 @@ export default function DashboardPassesPage() {
         <h1 className="text-2xl font-semibold tracking-[-0.01em]">Digital Passes &amp; QR Codes</h1>
         <p className="text-sm text-muted-foreground">Boarding passes and access codes for approved reservations.</p>
       </div>
+
+      <DataErrorBanner error={error} onRetry={refresh} context="your passes" />
 
       {loading ? (
         <div className="flex flex-col gap-4">

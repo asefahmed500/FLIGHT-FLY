@@ -17,6 +17,8 @@ type NewsletterFormValues = z.infer<typeof newsletterSchema>
 
 export function AppNewsletter() {
   const [subscribedEmail, setSubscribedEmail] = useState<string | null>(null)
+  const [alreadyMember, setAlreadyMember] = useState(false)
+  const [serverError, setServerError] = useState("")
 
   const {
     register,
@@ -29,13 +31,24 @@ export function AppNewsletter() {
   })
 
   const onSubmit = async (data: NewsletterFormValues) => {
-    // Show the confirmation state; a real email service is not wired up yet,
-    // so no "voucher sent" claim is made beyond the demo state.
-    setSubscribedEmail(data.email)
-    setTimeout(() => {
+    setServerError("")
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email }),
+      })
+      const body = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setServerError(body?.error || "Could not save your subscription. Try again.")
+        return
+      }
+      setAlreadyMember(!!body.alreadySubscribed)
+      setSubscribedEmail(data.email)
       reset()
-      setSubscribedEmail(null)
-    }, 4500)
+    } catch {
+      setServerError("Network error — check your connection and try again.")
+    }
   }
 
   return (
@@ -91,37 +104,52 @@ export function AppNewsletter() {
               </h3>
 
               <p className="text-slate-300 text-sm font-normal leading-relaxed mb-6">
-                Join the FlightFly Executive Digest for flash deal releases and luxury retreat invitations — plus the VIP50FLY welcome code for 50% off your first booking.
+                Join the FlightFly Executive Digest for flash deal releases and luxury retreat invitations before they sell out.
               </p>
             </div>
 
             {/* Form */}
             {subscribedEmail ? (
               <div className="p-6 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl text-center space-y-2">
-                <p className="text-base font-semibold text-emerald-300">✓ You&apos;re on the VIP list!</p>
-                <p className="text-xs text-slate-200 font-normal">Welcome aboard — <strong className="text-white">{subscribedEmail}</strong> will receive VIP offers in-app as they drop.</p>
+                <p className="text-base font-semibold text-emerald-300">
+                  {alreadyMember ? "✓ You&apos;re already on the list!" : "✓ You&apos;re on the VIP list!"}
+                </p>
+                <p className="text-xs text-slate-200 font-normal">
+                  {alreadyMember
+                    ? <>
+                        <strong className="text-white">{subscribedEmail}</strong> is already subscribed — watch for VIP offers.
+                      </>
+                    : <>
+                        Welcome aboard — <strong className="text-white">{subscribedEmail}</strong> will receive VIP offers as they drop.
+                      </>
+                  }
+                </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
                 <div className="relative">
                   <Mail className="w-5 h-5 absolute left-3.5 top-3.5 text-slate-400" />
-                  <Input 
-                    type="email" 
-                    placeholder="Enter your corporate or personal email" 
+                  <Input
+                    type="email"
+                    placeholder="Enter your corporate or personal email"
+                    aria-invalid={!!errors.email || !!serverError}
                     {...register("email")}
-                    className="pl-11 h-12 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/15 rounded-xl font-normal" 
+                    className="pl-11 h-12 bg-white/10 border-white/20 text-white placeholder:text-slate-400 focus:bg-white/15 rounded-xl font-normal"
                   />
                 </div>
                 {errors.email && (
                   <p className="text-xs text-amber-300 font-medium">{errors.email.message}</p>
                 )}
+                {serverError && !errors.email && (
+                  <p className="text-xs text-rose-300 font-medium" role="alert">{serverError}</p>
+                )}
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isSubmitting}
                   className="w-full h-12 bg-[#D97706] hover:bg-[#B45309] text-white font-semibold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
                 >
-                  {isSubmitting ? "Claiming..." : "Join VIP & Get 50% Off Code"} <ArrowRight className="w-4 h-4" />
+                  {isSubmitting ? "Joining…" : "Join the VIP Digest"} <ArrowRight className="w-4 h-4" />
                 </Button>
               </form>
             )}

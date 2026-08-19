@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Check, X, Trash2, Search, FileText, Eye, Download, ChevronLeft, ChevronRight, Phone, Mail, CalendarDays, Users, Globe2, FileBadge, CreditCard, MessageSquare } from "lucide-react"
+import { DataErrorBanner } from "@/components/data-error-banner"
 import type { Booking, BookingStatus } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -53,7 +54,7 @@ function statusBadge(status: string) {
 
 export default function AdminBookingsPage() {
   const { user } = useAuth()
-  const { bookings, total, page, setPage, loading, refresh } = useAllBookings(user)
+  const { bookings, total, page, setPage, loading, error: loadError, refresh } = useAllBookings(user)
   const [filter, setFilter] = useState<StatusFilter>("all")
   const [query, setQuery] = useState("")
   const [busy, setBusy] = useState<string | null>(null)
@@ -160,6 +161,8 @@ export default function AdminBookingsPage() {
       </div>
 
       {error && <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-medium text-rose-600">{error}</div>}
+
+      <DataErrorBanner error={loadError} onRetry={refresh} context="reservations" />
 
       {/* Status filter chips with counts */}
       <div className="flex flex-wrap gap-2">

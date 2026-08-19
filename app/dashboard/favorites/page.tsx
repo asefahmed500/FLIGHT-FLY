@@ -8,11 +8,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Heart, Trash2, ArrowRight } from "lucide-react"
+import { DataErrorBanner } from "@/components/data-error-banner"
+import { useToastStore } from "@/lib/stores/toast-store"
 
 export default function DashboardFavoritesPage() {
   const { user } = useAuth()
-  const { favorites, loading, refresh } = useMyFavorites(user)
+  const { favorites, loading, error, refresh } = useMyFavorites(user)
   const [busyId, setBusyId] = useState<string | null>(null)
+  const pushToast = useToastStore((s) => s.push)
 
   const remove = async (dealId: string) => {
     if (!user || busyId) return
@@ -20,8 +23,12 @@ export default function DashboardFavoritesPage() {
     try {
       await removeFavorite(user, dealId)
       refresh()
-    } catch {
-      // leave the list unchanged on failure
+    } catch (err) {
+      pushToast({
+        variant: "error",
+        title: "Could not remove favorite",
+        description: err instanceof Error ? err.message : "Please try again.",
+      })
     } finally {
       setBusyId(null)
     }
@@ -33,6 +40,8 @@ export default function DashboardFavoritesPage() {
         <h1 className="text-2xl font-semibold tracking-[-0.01em]">Saved Wishlist Destinations</h1>
         <p className="text-sm text-muted-foreground">Deals you saved with the heart icon, synced from PostgreSQL.</p>
       </div>
+
+      <DataErrorBanner error={error} onRetry={refresh} context="your wishlist" />
 
       {loading ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -69,7 +78,11 @@ export default function DashboardFavoritesPage() {
                     {fav.dealCategory ? `${fav.dealCategory} • ` : ""}From {fav.dealPrice}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
-                    <Button render={<Link href={`/deals/${fav.id}`} />} size="sm" className="h-8 text-xs bg-[#4F46E5]">
+                    <Button
+                      render={<Link href={fav.dealCategory === "destination" ? `/catalog/${fav.id}` : `/deals/${fav.id}`} />}
+                      size="sm"
+                      className="h-8 text-xs bg-[#4F46E5]"
+                    >
                       View Deal <ArrowRight data-icon="inline-end" />
                     </Button>
                     <Button

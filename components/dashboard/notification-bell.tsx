@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Bell, Check, CheckCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +27,7 @@ function timeAgo(iso: string): string {
 
 export function NotificationBell() {
   const { user } = useAuth()
-  const { notifications, unreadCount, refresh } = useNotifications(user)
+  const { notifications, unreadCount, loading, error, refresh } = useNotifications(user)
   const [marking, setMarking] = useState(false)
   const [markingId, setMarkingId] = useState<string | null>(null)
 
@@ -88,7 +89,26 @@ export function NotificationBell() {
         </div>
         <DropdownMenuSeparator className="my-0" />
         <div className="max-h-80 overflow-y-auto">
-          {notifications.length === 0 ? (
+          {loading ? (
+            <div className="flex flex-col gap-2.5 px-3 py-3">
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-3/4" />
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center gap-2 px-3 py-8 text-center">
+              <p className="text-xs font-medium text-rose-600">Couldn&apos;t load notifications</p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  refresh()
+                }}
+                className="text-[11px] font-medium text-[#4F46E5] hover:underline"
+              >
+                Try again
+              </button>
+            </div>
+          ) : notifications.length === 0 ? (
             <p className="px-3 py-8 text-center text-xs text-muted-foreground">
               No notifications yet — booking updates land here.
             </p>

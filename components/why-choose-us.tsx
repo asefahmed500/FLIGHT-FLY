@@ -1,28 +1,19 @@
 "use client"
 
 import { Sparkles } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { useCatalog } from "@/lib/firestore-data"
 import { resolveFeatureIcon } from "@/lib/feature-icons"
 import { Reveal } from "@/components/motion/reveal"
 
-const FEATURES = [
-  { id: "feat-1", icon: "shield", title: "Best Price Guarantee", description: "We match any lower published rate online or refund 100% of the price difference instantly." },
-  { id: "feat-2", icon: "headset", title: "24/7 Dedicated Support", description: "Personal corporate travel concierge ready to assist you via call, email, or WhatsApp anywhere globally." },
-  { id: "feat-3", icon: "refresh", title: "Flexible Free Cancellation", description: "Cancel flights, hotels, and tours up to 24 hours prior to departure with zero penalty fees." },
-  { id: "feat-4", icon: "card", title: "Bank-Grade Secure Payment", description: "Protected by 256-bit SSL encryption, supporting corporate invoicing, Credit Card, and Apple Pay." },
-  { id: "feat-5", icon: "award", title: "Curated Luxury Standards", description: "Every hotel, airline suite, and tour guide is hand-inspected to meet executive 5-star standards." },
-  { id: "feat-6", icon: "building", title: "Verified Global Partners", description: "Direct partnerships with over 500 airlines and 85,000 luxury resorts worldwide." }
-]
-
 export function WhyChooseUs() {
-  const { catalog } = useCatalog()
-  const live = catalog.filter((c) => c.kind === "feature").map((f) => ({
+  const { catalog, loading } = useCatalog()
+  const features = catalog.filter((c) => c.kind === "feature").map((f) => ({
     id: f.id,
     icon: f.icon || "shield",
     title: f.title,
     description: f.subtitle || "",
   }))
-  const features = live.length > 0 ? live : FEATURES
 
   return (
     <section id="why-choose-us" className="py-24 bg-white">
@@ -42,8 +33,15 @@ export function WhyChooseUs() {
         </Reveal>
 
         {/* 6 Feature Cards — one row, compact, uniform padding */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
-          {features.map((feat, idx) => {
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-44 rounded-xl" />
+            ))}
+          </div>
+        ) : features.length === 0 ? null : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
+            {features.map((feat, idx) => {
             const IconComponent = resolveFeatureIcon(feat.icon)
             return (
               <Reveal key={feat.id} variant="scale" delay={(idx % 6) * 60}>
@@ -61,7 +59,8 @@ export function WhyChooseUs() {
               </Reveal>
             )
           })}
-        </div>
+          </div>
+        )}
 
       </div>
     </section>

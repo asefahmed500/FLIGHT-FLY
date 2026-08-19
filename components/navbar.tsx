@@ -1,13 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useAuth } from "@/lib/auth-context"
-import { Plane, Globe, ChevronDown, Menu, User, PhoneCall, Sparkles, ShieldCheck, LayoutDashboard, LogOut, ChevronRight } from "lucide-react"
+import { Plane, ChevronDown, Menu, User, PhoneCall, Sparkles, ShieldCheck, LayoutDashboard, LogOut, ChevronRight } from "lucide-react"
 import { FlightFlyMark } from "@/components/icons"
 
 interface NavChild {
@@ -79,8 +78,6 @@ function groupActive(pathname: string, item: NavItem): boolean {
 export function Navbar() {
   const { user, role, logout } = useAuth()
   const pathname = usePathname()
-  const [currency, setCurrency] = useState("USD ($)")
-  const [language, setLanguage] = useState("English (US)")
 
   const dashboardHref = role === "admin" ? "/admin" : "/dashboard"
 
@@ -99,50 +96,9 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-4 text-slate-300">
-            {/* Currency Switcher Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="hover:text-white flex items-center gap-1 transition-colors cursor-pointer outline-none font-medium">
-                  <span>{currency}</span>
-                  <ChevronDown className="w-3 h-3 text-slate-400" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white text-slate-900 border-slate-200 shadow-xl z-50 min-w-48 p-1.5">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs font-semibold text-slate-500 px-2 py-1">Select Currency</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-slate-100" />
-                  <DropdownMenuItem onClick={() => setCurrency("USD ($)")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">USD ($) - US Dollar</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setCurrency("EUR (€)")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">EUR (€) - Euro</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setCurrency("GBP (£)")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">GBP (£) - British Pound</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setCurrency("AED (د.إ)")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">AED (د.إ) - UAE Dirham</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setCurrency("JPY (¥)")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">JPY (¥) - Japanese Yen</DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <span className="text-slate-700">|</span>
-
-            {/* Language Switcher Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="hover:text-white flex items-center gap-1 transition-colors cursor-pointer outline-none font-medium">
-                  <Globe className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{language.split(" ")[0]}</span>
-                  <ChevronDown className="w-3 h-3 text-slate-400" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white text-slate-900 border-slate-200 shadow-xl z-50 min-w-44 p-1.5">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs font-semibold text-slate-500 px-2 py-1">Select Language</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-slate-100" />
-                  <DropdownMenuItem onClick={() => setLanguage("English (US)")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">English (US)</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLanguage("Français")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">Français</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLanguage("Deutsch")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">Deutsch</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLanguage("Español")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">Español</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLanguage("العربية")} className="cursor-pointer text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md font-medium text-xs py-2">العربية</DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-slate-400 font-normal">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" /> Secure &amp; IATA Accredited Booking
+            </span>
           </div>
         </div>
       </div>
@@ -236,8 +192,13 @@ export function Navbar() {
             <div className="flex items-center gap-2 md:hidden">
               <Sheet>
                 <SheetTrigger>
-                  <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50">
-                    <Menu className="h-5 w-5 text-[#111111]" />
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Open navigation menu"
+                    className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50"
+                  >
+                    <Menu className="h-5 w-5 text-[#111111]" aria-hidden="true" />
                   </div>
                 </SheetTrigger>
                 <SheetContent side="right" className="flex flex-col justify-between border-slate-200 bg-white p-6">
@@ -275,9 +236,18 @@ export function Navbar() {
 
                   <div className="space-y-3 border-t border-slate-200 pt-6">
                     {user ? (
-                      <Button render={<Link href={dashboardHref} />} className="h-11 w-full bg-[#4F46E5] font-medium text-white">
-                        <Sparkles className="mr-2 h-4 w-4 text-amber-300" /> Open Dashboard ({role})
-                      </Button>
+                      <>
+                        <Button render={<Link href={dashboardHref} />} className="h-11 w-full bg-[#4F46E5] font-medium text-white">
+                          <Sparkles className="mr-2 h-4 w-4 text-amber-300" /> Open Dashboard ({role})
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={logout}
+                          className="h-11 w-full border-rose-200 font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                        >
+                          <LogOut className="mr-2 h-4 w-4" /> Log out
+                        </Button>
+                      </>
                     ) : (
                       <Button render={<Link href="/login?tab=login" />} variant="outline" className="h-11 w-full border-slate-300 font-medium">
                         <User className="mr-2 h-4 w-4" /> Login to Account

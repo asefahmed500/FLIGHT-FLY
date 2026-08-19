@@ -22,13 +22,19 @@ import { useToastStore } from "@/lib/stores/toast-store"
 import type { BookingItemType } from "@/lib/types"
 
 // Zod Reservation Schema
+const todayStr = () => new Date().toISOString().split("T")[0]
+
 const bookingSchema = z.object({
   passengerName: z.string().min(2, "Primary guest name must be at least 2 characters"),
   email: z.string().min(1, "Email is required").email("Please enter a valid email for ticket confirmation"),
   phone: z.string().min(7, "Contact phone is required").regex(/^\+?[0-9 ()-]{7,20}$/, "Enter a valid phone number"),
   cabinClass: z.string().min(1, "Class selection is required"),
   paymentType: z.enum(["card", "invoice"]),
-  travelDate: z.string().min(1, "Travel date is required").regex(/^\d{4}-\d{2}-\d{2}$/, "Pick a valid date"),
+  travelDate: z
+    .string()
+    .min(1, "Travel date is required")
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Pick a valid date")
+    .refine((v) => v >= todayStr(), "Travel date cannot be in the past"),
   guests: z.string().refine((v) => {
       const n = Number(v)
       return Number.isInteger(n) && n >= 1 && n <= 12

@@ -133,7 +133,7 @@ function CatalogListingInner({
               onlyDeals ? "border-amber-400 bg-amber-50 text-amber-700" : "text-slate-600"
             }`}
           >
-            🔥 Deals only
+            <span aria-hidden="true">🔥</span> Deals only
           </Button>
           <Select value={sort} onValueChange={(v) => v && setSort(v)}>
             <SelectTrigger className="h-11 w-44 text-sm">

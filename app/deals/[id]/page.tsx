@@ -1,7 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { PageFrame } from "@/components/page-frame"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -11,7 +12,9 @@ import { Reveal } from "@/components/motion/reveal"
 import { useDeals } from "@/lib/firestore-data"
 import { useBookingStore } from "@/lib/stores/booking-store"
 import { useToastStore } from "@/lib/stores/toast-store"
-import { ChevronRight, Star, ShieldCheck, CalendarCheck, Clock, BadgeCheck, Check } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
+import { useMyFavorites, toggleFavorite } from "@/lib/app-data"
+import { ChevronRight, Star, ShieldCheck, CalendarCheck, Clock, BadgeCheck, Check, Heart } from "lucide-react"
 import type { Deal, DealCategory, BookingItemType } from "@/lib/types"
 
 const CATEGORY_TYPE: Record<DealCategory, BookingItemType> = {
@@ -36,6 +39,43 @@ export default function DealDetailPage() {
   const { deals, loading } = useDeals()
   const openBooking = useBookingStore((s) => s.openBooking)
   const pushToast = useToastStore((s) => s.push)
+  const router = useRouter()
+  const { user } = useAuth()
+  const { favorites, refresh } = useMyFavorites(user)
+  const [saving, setSaving] = useState(false)
+
+  const savedIds = new Set(favorites.map((f) => f.id))
+
+  const handleToggleFavorite = async () => {
+    const deal = deals.find((d) => d.id === id)
+    if (!deal || !user || saving) return
+    setSaving(true)
+    try {
+      const res = await toggleFavorite(user, {
+        id: deal.id,
+        title: deal.title,
+        price: deal.discountPrice,
+        category: deal.category,
+        image: deal.image,
+      })
+      refresh()
+      pushToast({
+        variant: res.added ? "success" : "info",
+        title: res.added ? "Saved to your wishlist" : "Removed from wishlist",
+        description: res.added
+          ? "Find it anytime under Saved Wishlist in your dashboard."
+          : "This deal was removed from your saved list.",
+      })
+    } catch (err) {
+      pushToast({
+        variant: "error",
+        title: "Could not update wishlist",
+        description: err instanceof Error ? err.message : "Please try again.",
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -56,7 +96,7 @@ export default function DealDetailPage() {
     return (
       <PageFrame>
         <div className="flex flex-col items-center gap-4 py-24 text-center">
-          <p className="text-5xl">🔥</p>
+          <p className="text-5xl" aria-hidden="true">🔥</p>
           <h1 className="text-2xl font-semibold text-[#111111]">This deal has ended</h1>
           <p className="text-sm text-slate-500">It either expired or sold out. Check out this week&apos;s fresh deals instead.</p>
           <Button render={<Link href="/deals" />} className="mt-2 bg-amber-500 hover:bg-amber-600">
@@ -113,7 +153,7 @@ export default function DealDetailPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute left-6 top-6 flex gap-2">
                 <Badge className="bg-white/95 font-semibold text-slate-900">{deal.badge}</Badge>
-                <Badge className="bg-amber-500 font-semibold text-white">🔥 Hot Deal</Badge>
+                <Badge className="bg-amber-500 font-semibold text-white"><span aria-hidden="true">🔥</span> Hot Deal</Badge>
               </div>
             </div>
 
@@ -167,7 +207,7 @@ export default function DealDetailPage() {
           </div>
 
           {/* Sticky booking card */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div className="lg:sticky lg:top-32 lg:self-start">
             <div className="overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-b from-amber-50 to-white p-6 shadow-lg shadow-amber-900/5">
               {savings && (
                 <div className="mb-4 flex items-center justify-between rounded-xl bg-amber-500 px-3 py-2 text-white">
@@ -203,10 +243,21 @@ export default function DealDetailPage() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => pushToast({ variant: "info", title: "Added to your watchlist", description: "Track this deal from your dashboard — the offer page always shows the live price." })}
+                onClick={() => {
+                  if (!user) {
+                    router.push("/login?tab=login")
+                    return
+                  }
+                  handleToggleFavorite()
+                }}
+                disabled={saving}
                 className="mt-2 h-11 w-full border-amber-300 bg-white text-sm font-medium text-[#B45309] hover:bg-amber-100"
               >
-                Save this deal
+                <Heart
+                  className={`mr-1.5 h-4 w-4 ${savedIds.has(deal.id) ? "fill-rose-500 text-rose-500" : ""}`}
+                  aria-hidden="true"
+                />
+                {saving ? "Updating…" : savedIds.has(deal.id) ? "Saved — remove from wishlist" : "Save this deal"}
               </Button>
 
               <div className="mt-5 space-y-3 border-t border-amber-100 pt-5">

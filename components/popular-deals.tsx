@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import Link from "next/link"
@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tag, Star, Clock, ArrowRight, Heart } from "lucide-react"
+import { Tag, Clock, Heart } from "lucide-react"
 import { useDeals } from "@/lib/firestore-data"
 import { useMyFavorites, toggleFavorite } from "@/lib/app-data"
 import { useAuth } from "@/lib/auth-context"
@@ -20,147 +21,21 @@ interface PopularDealsProps {
   onBookItem: (item: BookingItemInfo) => void
 }
 
-const STATIC_DEALS = [
-  {
-    id: "deal-1",
-    category: "flights",
-    title: "Emirates Business Class to Dubai",
-    subtitle: "Non-stop luxury flight with limousine transfer",
-    originalPrice: "$2,400",
-    discountPrice: "$1,650",
-    badge: "SAVE $750",
-    rating: 5.0,
-    expires: "2 days left",
-    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-2",
-    category: "hotels",
-    title: "Overwater Villa at Anantara Maldives",
-    subtitle: "Includes daily champagne breakfast & ocean spa credit",
-    originalPrice: "$1,890",
-    discountPrice: "$1,290",
-    badge: "32% OFF",
-    rating: 4.9,
-    expires: "Limited Capacity",
-    image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-3",
-    category: "packages",
-    title: "Swiss Alps Helicopter & Chalet Escape",
-    subtitle: "7-day luxury chalet stay + panoramic helicopter tour",
-    originalPrice: "$3,500",
-    discountPrice: "$2,650",
-    badge: "EXECUTIVE DEAL",
-    rating: 5.0,
-    expires: "Selling Fast",
-    image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-4",
-    category: "flights",
-    title: "Tokyo First Class Suite with Singapore Airlines",
-    subtitle: "Private cabin suite with fine dining",
-    originalPrice: "$4,200",
-    discountPrice: "$3,100",
-    badge: "SAVE $1,100",
-    rating: 4.9,
-    expires: "3 days left",
-    image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-5",
-    category: "hotels",
-    title: "The Ritz Paris Luxury Suite Package",
-    subtitle: "Includes private butler service & Michelin dining voucher",
-    originalPrice: "$2,100",
-    discountPrice: "$1,480",
-    badge: "VIP INCLUSIVE",
-    rating: 5.0,
-    expires: "Exclusive Pass",
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-6",
-    category: "packages",
-    title: "Amalfi Coast Yacht & Villa Expedition",
-    subtitle: "Private skippered yacht charter + cliffside hotel",
-    originalPrice: "$4,800",
-    discountPrice: "$3,400",
-    badge: "SAVE 28%",
-    rating: 4.9,
-    expires: "Summer Special",
-    image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-7",
-    category: "visa",
-    title: "Schengen Multi-Entry Visa Bundle",
-    subtitle: "Visa processing + priority appointment + travel insurance included",
-    originalPrice: "$320",
-    discountPrice: "$220",
-    badge: "VISA DEAL",
-    rating: 4.9,
-    expires: "2 weeks left",
-    image: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-8",
-    category: "visa",
-    title: "US B1/B2 Express Visa Package",
-    subtitle: "Interview coaching + priority slot booking in major cities",
-    originalPrice: "$380",
-    discountPrice: "$285",
-    badge: "SAVE $95",
-    rating: 5.0,
-    expires: "Priority slots",
-    image: "https://images.unsplash.com/photo-1522083165195-3424ed129620?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-9",
-    category: "tickets",
-    title: "Burj Khalifa Sky Duo Package",
-    subtitle: "Two Level 148 sunset tickets with lounge refreshments",
-    originalPrice: "$310",
-    discountPrice: "$250",
-    badge: "DUO SAVE",
-    rating: 5.0,
-    expires: "Selling Fast",
-    image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "deal-10",
-    category: "tickets",
-    title: "Cirque du Soleil Premium Duo",
-    subtitle: "Reserved club section seats with backstage meet & greet",
-    originalPrice: "$470",
-    discountPrice: "$390",
-    badge: "FRONT ROW",
-    rating: 4.9,
-    expires: "This season",
-    image: "https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop"
-  },
-]
-
 export function PopularDeals({ onBookItem }: PopularDealsProps) {
   const [filter, setFilter] = useState("all")
-  const [savingId, setSavingId] = useState<string | null>(null)
   const router = useRouter()
-  const { deals } = useDeals()
+  const { deals, loading } = useDeals()
   const { user } = useAuth()
   const { favorites, refresh } = useMyFavorites(user)
 
   const savedIds = new Set(favorites.map((f) => f.id))
-  const source = deals.length > 0 ? deals : STATIC_DEALS
-  const filteredDeals = filter === "all" ? source : source.filter(d => d.category === filter)
+  const filteredDeals = filter === "all" ? deals : deals.filter((d) => d.category === filter)
 
-  const handleToggleFavorite = async (deal: (typeof source)[number]) => {
+  const handleToggleFavorite = async (deal: (typeof deals)[number]) => {
     if (!user) {
       router.push("/login?tab=login")
       return
     }
-    setSavingId(deal.id)
     try {
       await toggleFavorite(user, {
         id: deal.id,
@@ -172,8 +47,6 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
       refresh()
     } catch {
       // Favorite toggle failed — leave UI unchanged.
-    } finally {
-      setSavingId(null)
     }
   }
 
@@ -208,8 +81,30 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
         </Reveal>
 
         {/* Deals Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-          {filteredDeals.map((deal, i) => (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-96 rounded-xl" />
+            ))}
+          </div>
+        ) : filteredDeals.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-slate-300 bg-white py-16 text-center">
+            <Tag className="size-8 text-slate-300" aria-hidden="true" />
+            <p className="text-sm font-semibold text-[#111111]">
+              {filter === "all" ? "No live deals right now" : `No ${filter} deals right now`}
+            </p>
+            <p className="max-w-sm text-xs text-slate-500">
+              New offers drop weekly — check back soon or browse all deals.
+            </p>
+            {filter !== "all" && (
+              <Button variant="outline" size="sm" onClick={() => setFilter("all")} className="border-slate-200 text-xs">
+                Show all deals
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+            {filteredDeals.map((deal, i) => (
             <Reveal key={deal.id} variant="scale" delay={(i % 3) * 80} className="h-full">
             <Card className="rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden bg-white group flex flex-col justify-between">
 
@@ -281,7 +176,8 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
             </Card>
             </Reveal>
           ))}
-        </div>
+          </div>
+        )}
 
       </div>
     </section>

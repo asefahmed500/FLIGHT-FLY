@@ -7,38 +7,8 @@ import { useCatalog } from "@/lib/firestore-data"
 import type { CatalogItem } from "@/lib/types"
 import { Reveal } from "@/components/motion/reveal"
 
-const TESTIMONIALS = [
-  {
-    id: "test-1",
-    name: "Sarah Jenkins",
-    role: "VP of Global Marketing, TechScale",
-    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop",
-    rating: 5,
-    verified: "Verified Corporate Account",
-    text: "FlightFly simplified our quarterly corporate retreat for 45 executives. The concierge team secured First-Class flight upgrades and managed all ground transfers effortlessly."
-  },
-  {
-    id: "test-2",
-    name: "Dr. Alexander Wright",
-    role: "Chief Surgeon & Luxury Traveler",
-    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop",
-    rating: 5,
-    verified: "VIP Platinum Traveler",
-    text: "Our Maldives honeymoon booked through FlightFly was pure magic. Overwater bungalow with private sea plane transfer and 24/7 dedicated support. Unmatched luxury!"
-  },
-  {
-    id: "test-3",
-    name: "Elena Rostova",
-    role: "Managing Director, Rostova Capital",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop",
-    rating: 5,
-    verified: "Verified Business Traveler",
-    text: "I travel over 100,000 miles a year for international negotiations. FlightFly’s best-price guarantee and instant 24/7 concierge response make them my exclusive travel partner."
-  }
-]
-
 export function Testimonials() {
-  const { catalog } = useCatalog()
+  const { catalog, loading } = useCatalog()
 
   const normalize = (item: CatalogItem) => ({
     id: item.id,
@@ -49,8 +19,9 @@ export function Testimonials() {
     verified: item.subtitle || item.verified || "Verified Traveler",
     text: item.text || "",
   })
-  const live = catalog.filter((c) => c.kind === "testimonial").map(normalize)
-  const testimonials = live.length > 0 ? live : TESTIMONIALS
+  const testimonials = catalog.filter((c) => c.kind === "testimonial").map(normalize)
+
+  if (loading || testimonials.length === 0) return null
 
   return (
     <section className="py-24 bg-white">

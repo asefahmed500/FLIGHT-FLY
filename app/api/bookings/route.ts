@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { verifyIdToken, bearerToken, isAdminIdentity } from "@/lib/server-auth"
 import { verifyBookableItem } from "@/lib/verify-item"
 import { rateLimit, clientKeyFromReq } from "@/lib/rate-limit"
+import { REF_PREFIX } from "@/lib/config"
 import type { BookingItemType, BookingStatus, PaymentType } from "@/lib/types"
 
 export const dynamic = "force-dynamic"
@@ -12,7 +13,7 @@ const ITEM_TYPES = ["flight", "hotel", "tour", "package", "visa", "ticket"] as c
 const PAYMENT_TYPES = ["card", "invoice"] as const
 
 function newRefId(): string {
-  return `FL-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
+  return `${REF_PREFIX}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
 }
 
 function parseAmount(price: string): number | null {
@@ -192,6 +193,9 @@ export async function POST(req: Request) {
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(travelDate)) {
     return NextResponse.json({ error: "A travel date is required (YYYY-MM-DD)." }, { status: 400 })
+  }
+  if (travelDate < new Date().toISOString().split("T")[0]) {
+    return NextResponse.json({ error: "Travel date cannot be in the past." }, { status: 400 })
   }
   if (!nationality) {
     return NextResponse.json({ error: "Nationality is required." }, { status: 400 })

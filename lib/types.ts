@@ -67,25 +67,6 @@ export interface Deal {
   createdAt?: { seconds: number; nanoseconds: number }
 }
 
-export interface BookingPayload {
-  userId: string
-  userEmail: string
-  passengerName: string
-  email: string
-  phone?: string
-  itemTitle: string
-  itemType: BookingItemType
-  price: string
-  cabinClass: string
-  paymentType: PaymentType
-  travelDate?: string
-  guests?: number
-  nationality?: string
-  passportNumber?: string
-  specialRequests?: string
-  status: "pending"
-}
-
 export type CatalogKind =
   | "visa"
   | "ticket"

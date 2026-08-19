@@ -62,8 +62,22 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     return NextResponse.json({ error: "Admin access required." }, { status: 403 })
   }
 
-  const existing = await db.booking.findUnique({ where: { id }, select: { id: true, refId: true } })
+  const existing = await db.booking.findUnique({
+    where: { id },
+    select: { id: true, refId: true, userId: true, itemTitle: true, finalPrice: true },
+  })
   if (!existing) return NextResponse.json({ error: "Booking not found." }, { status: 404 })
+
+  // Notify the customer BEFORE the delete cascades their notification rows.
+  await db.notification
+    .create({
+      data: {
+        userId: existing.userId,
+        title: `Booking ${existing.refId} removed`,
+        body: `${existing.itemTitle} (${existing.finalPrice}) was removed by our concierge team. Contact support with any questions.`,
+      },
+    })
+    .catch(() => {})
 
   await db.booking.delete({ where: { id } }).catch(() => {})
   return NextResponse.json({ ok: true })

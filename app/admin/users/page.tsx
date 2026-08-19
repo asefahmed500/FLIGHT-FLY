@@ -10,12 +10,13 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ShieldCheck, ShieldOff, Search, Users as UsersIcon, Crown, User as UserIcon } from "lucide-react"
+import { DataErrorBanner } from "@/components/data-error-banner"
 import type { UserRole } from "@/lib/auth-context"
 import { cn } from "@/lib/utils"
 
 export default function AdminUsersPage() {
   const { user, updateUserRole } = useAuth()
-  const { users, loading, refresh } = useUsers(user)
+  const { users, loading, error: loadError, refresh } = useUsers(user)
   const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all")
   const [query, setQuery] = useState("")
   const [busy, setBusy] = useState<string | null>(null)
@@ -71,6 +72,8 @@ export default function AdminUsersPage() {
       </div>
 
       {error && <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-medium text-rose-600">{error}</div>}
+
+      <DataErrorBanner error={loadError} onRetry={refresh} context="users" />
 
       <div className="flex flex-wrap gap-2">
         {roleChips.map((chip) => (

@@ -4,10 +4,11 @@ import { useState } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { Star, MapPin, ArrowRight, Heart, Sparkles } from "lucide-react"
+import { MapPin, Heart, Sparkles } from "lucide-react"
 import { useCatalog } from "@/lib/firestore-data"
+import { useAuth } from "@/lib/auth-context"
+import { useMyFavorites, toggleFavorite } from "@/lib/app-data"
 import type { BookingItemInfo } from "@/lib/stores/booking-store"
 import type { CatalogItem } from "@/lib/types"
 import { Reveal } from "@/components/motion/reveal"
@@ -32,79 +33,14 @@ interface DestinationCard {
   originalPrice?: string
 }
 
-const DESTINATIONS: DestinationCard[] = [
-  {
-    id: "paris",
-    name: "Paris",
-    country: "France",
-    price: "$680",
-    rating: 4.9,
-    reviews: "1,240 reviews",
-    tag: "Most Popular",
-    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=800&auto=format&fit=crop",
-    description: "Flight + 4 Nights at Eiffel Luxury Hotel"
-  },
-  {
-    id: "bali",
-    name: "Bali",
-    country: "Indonesia",
-    price: "$520",
-    rating: 4.9,
-    reviews: "980 reviews",
-    tag: "Trending Luxury",
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800&auto=format&fit=crop",
-    description: "Private Pool Villa + Flights Included"
-  },
-  {
-    id: "dubai",
-    name: "Dubai",
-    country: "United Arab Emirates",
-    price: "$890",
-    rating: 5.0,
-    reviews: "2,150 reviews",
-    tag: "Executive Pick",
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=800&auto=format&fit=crop",
-    description: "5-Star Resort Stay + Desert Safari"
-  },
-  {
-    id: "tokyo",
-    name: "Tokyo",
-    country: "Japan",
-    price: "$950",
-    rating: 4.8,
-    reviews: "1,890 reviews",
-    tag: "Top Rated",
-    image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800&auto=format&fit=crop",
-    description: "First-Class Flight & Ginza Boutique Hotel"
-  },
-  {
-    id: "newyork",
-    name: "New York",
-    country: "United States",
-    price: "$430",
-    rating: 4.7,
-    reviews: "3,400 reviews",
-    tag: "Flash Deal",
-    image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=800&auto=format&fit=crop",
-    description: "Manhattan Luxury Suite + Direct Flight"
-  },
-  {
-    id: "maldives",
-    name: "Maldives",
-    country: "Tropical Paradise",
-    price: "$1,250",
-    rating: 5.0,
-    reviews: "860 reviews",
-    tag: "VIP Honeymoon",
-    image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=800&auto=format&fit=crop",
-    description: "Overwater Bungalows + Sea Plane Transfer"
-  }
-]
-
 export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) {
-  const { catalog } = useCatalog()
+  const { catalog, loading } = useCatalog()
   const live = catalog.filter((c) => c.kind === "destination")
-  const [favorites, setFavorites] = useState<string[]>([])
+  const { user } = useAuth()
+  const { favorites, refresh } = useMyFavorites(user)
+  const [savingId, setSavingId] = useState<string | null>(null)
+
+  const savedIds = new Set(favorites.map((f) => f.id))
 
   const normalize = (item: CatalogItem): DestinationCard => ({
     id: item.id,
@@ -119,14 +55,29 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
     deal: item.deal,
     originalPrice: item.originalPrice,
   })
-  const destinations = live.length > 0 ? live.map(normalize) : DESTINATIONS
+  const destinations = live.map(normalize)
 
-  const toggleFavorite = (id: string, e: React.MouseEvent) => {
+  const handleToggleFavorite = async (dest: DestinationCard, e: React.MouseEvent) => {
     e.stopPropagation()
-    setFavorites((prev) => 
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
+    if (!user || savingId) return
+    setSavingId(dest.id)
+    try {
+      await toggleFavorite(user, {
+        id: dest.id,
+        title: `${dest.name}, ${dest.country}`,
+        price: dest.price,
+        category: "destination",
+        image: dest.image,
+      })
+      refresh()
+    } catch {
+      // Favorite toggle failed — leave UI unchanged.
+    } finally {
+      setSavingId(null)
+    }
   }
+
+  if (loading || destinations.length === 0) return null
 
   return (
     <section id="featured-destinations" className="py-24 bg-white">
@@ -172,13 +123,16 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
 
                         {dest.deal && <DealChip className="absolute right-14 top-4" />}
 
-                        <button
-                          onClick={(e) => toggleFavorite(dest.id, e)}
-                          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md hover:bg-white flex items-center justify-center transition-colors shadow-md"
-                          aria-label={`Favorite ${dest.name}`}
-                        >
-                          <Heart className={`w-4 h-4 ${favorites.includes(dest.id) ? "fill-rose-500 text-rose-500" : "text-slate-700"}`} />
-                        </button>
+                        {user && (
+                          <button
+                            onClick={(e) => handleToggleFavorite(dest, e)}
+                            disabled={savingId === dest.id}
+                            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md hover:bg-white flex items-center justify-center transition-colors shadow-md"
+                            aria-label={savedIds.has(dest.id) ? `Remove ${dest.name} from wishlist` : `Save ${dest.name} to wishlist`}
+                          >
+                            <Heart className={`w-4 h-4 ${savedIds.has(dest.id) ? "fill-rose-500 text-rose-500" : "text-slate-700"}`} aria-hidden="true" />
+                          </button>
+                        )}
 
                         <div className="absolute bottom-3.5 left-4 text-white">
                           <div className="flex items-center gap-1 text-xs text-slate-200 font-normal">

@@ -3,10 +3,9 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Sticker, Clock, Star, ArrowRight } from "lucide-react"
+import { Sticker, Clock } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { BookingItemInfo } from "@/lib/stores/booking-store"
-import type { BookingItemType } from "@/lib/types"
 import { useCatalog } from "@/lib/firestore-data"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
@@ -16,51 +15,9 @@ interface VisaServicesProps {
   onBookItem: (item: BookingItemInfo) => void
 }
 
-const VISA_SERVICES = [
-  {
-    id: "visa-schengen",
-    title: "Schengen Area Tourist Visa",
-    subtitle: "30-day multi-entry visa with concierge dossier review",
-    price: "$220",
-    originalPrice: "$280",
-    deal: true,
-    badge: "Approval 5-7 Days",
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "visa-usa",
-    title: "US B1/B2 Visitor Visa",
-    subtitle: "Appointment booking, DS-160 help & interview coaching",
-    price: "$285",
-    badge: "Priority Slots",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1522083165195-3424ed129620?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "visa-uk",
-    title: "UK Standard Visitor Visa",
-    subtitle: "6-month multi-entry with document translation service",
-    price: "$240",
-    badge: "Premium Lounge",
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: "visa-uae",
-    title: "UAE & Dubai Visit Visa",
-    subtitle: "30-day single-entry issued in under 48 hours",
-    price: "$95",
-    badge: "Same-Day Express",
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=800&auto=format&fit=crop",
-  },
-]
-
 export function VisaServices({ onBookItem }: VisaServicesProps) {
-  const { catalog } = useCatalog()
-  const live = catalog.filter((item) => item.kind === "visa")
-  const services = live.length > 0 ? live : VISA_SERVICES
+  const { catalog, loading } = useCatalog()
+  const services = catalog.filter((item) => item.kind === "visa")
 
   return (
     <section id="visa-services" className="bg-[#FAFAFA] py-24">
@@ -77,8 +34,15 @@ export function VisaServices({ onBookItem }: VisaServicesProps) {
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
-          {services.map((visa, i) => (
+        {loading ? (
+          <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-80 rounded-xl" />
+            ))}
+          </div>
+        ) : services.length === 0 ? null : (
+          <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
+            {services.map((visa, i) => (
             <Reveal key={visa.id} variant="scale" delay={i * 80}>
               <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-xl">
                 <div className="relative h-44 overflow-hidden">
@@ -116,7 +80,8 @@ export function VisaServices({ onBookItem }: VisaServicesProps) {
               </Card>
             </Reveal>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   )

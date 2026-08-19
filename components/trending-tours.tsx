@@ -3,9 +3,8 @@
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { Star, Clock, Users, ArrowRight, Compass } from "lucide-react"
+import { Compass } from "lucide-react"
 import { useCatalog } from "@/lib/firestore-data"
 import type { BookingItemInfo } from "@/lib/stores/booking-store"
 import type { CatalogItem } from "@/lib/types"
@@ -33,66 +32,8 @@ interface TourCard {
   image: string
 }
 
-const TOURS: TourCard[] = [
-  {
-    id: "tour-1",
-    title: "Dubai Desert Safari & VIP BBQ Dinner",
-    location: "Dubai, UAE",
-    duration: "6 Hours",
-    groupSize: "Max 8 People",
-    rating: 4.9,
-    reviews: "1,420",
-    price: "$120",
-    originalPrice: "$150",
-    deal: true,
-    tag: "Best Seller",
-    subtitle: "Dune bashing, camel rides and a private VIP BBQ dinner under the stars.",
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "tour-2",
-    title: "Eiffel Tower VIP Sunset Champagne Tour",
-    location: "Paris, France",
-    duration: "3 Hours",
-    groupSize: "Small Group",
-    rating: 4.8,
-    reviews: "980",
-    price: "$210",
-    tag: "Top Rated",
-    subtitle: "Skip-the-line summit access with a glass of champagne at sunset.",
-    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "tour-3",
-    title: "Kyoto Heritage Temples & Tea Ceremony",
-    location: "Kyoto, Japan",
-    duration: "Full Day",
-    groupSize: "Private Tour",
-    rating: 5.0,
-    reviews: "750",
-    price: "$165",
-    tag: "Cultural Classic",
-    subtitle: "Ancient temples, zen gardens and a private tea ceremony with a master.",
-    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    id: "tour-4",
-    title: "Grand Canyon VIP Helicopter & Landing",
-    location: "Nevada, USA",
-    duration: "4.5 Hours",
-    groupSize: "Max 6 Passengers",
-    rating: 5.0,
-    reviews: "2,100",
-    price: "$450",
-    tag: "VIP Helicopter",
-    subtitle: "Helicopter flight with a champagne picnic landing on the canyon floor.",
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop"
-  }
-]
-
 export function TrendingTours({ onBookItem }: TrendingToursProps) {
-  const { catalog } = useCatalog()
-  const live = catalog.filter((item) => item.kind === "tour")
+  const { catalog, loading } = useCatalog()
   const normalize = (item: CatalogItem): TourCard => ({
     id: item.id,
     title: item.title,
@@ -108,7 +49,9 @@ export function TrendingTours({ onBookItem }: TrendingToursProps) {
     subtitle: item.subtitle || "",
     image: item.image,
   })
-  const tours = live.length > 0 ? live.map(normalize) : TOURS
+  const tours = catalog.filter((item) => item.kind === "tour").map(normalize)
+
+  if (loading || tours.length === 0) return null
 
   return (
     <section id="trending-tours" className="py-24 bg-[#FAFAFA]">

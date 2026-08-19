@@ -122,7 +122,7 @@ export function ScrollytellingSection() {
 
         {/* Tall scroll track */}
         <div ref={sectionRef} className="relative h-[400vh]">
-          <div className="sticky top-24 h-[calc(100vh-8.5rem)] overflow-hidden rounded-3xl border border-slate-200/80 bg-[#111111] shadow-xl shadow-slate-900/10">
+          <div className="sticky top-32 h-[calc(100vh-9.5rem)] overflow-hidden rounded-3xl border border-slate-200/80 bg-[#111111] shadow-xl shadow-slate-900/10">
             <div className="flex h-full flex-col gap-6 p-6 sm:p-8 lg:grid lg:grid-cols-[300px_1fr] lg:items-center lg:gap-10 lg:p-10">
               {/* Step rail */}
               <div className="flex flex-col gap-3">
