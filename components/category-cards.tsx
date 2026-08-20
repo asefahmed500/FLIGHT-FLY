@@ -74,44 +74,28 @@ export function CategoryCards() {
           </div>
         </div>
 
-        {/* 6 Category Cards — bento layout: two wide hero tiles + four squares.
-            Orbital ring on the icon + 3D lift grid + cursor glare. */}
-        <LiftGrid
-          columns={6}
-          cellClassNames={CATEGORIES.map((_, i) => (i < 2 ? "sm:col-span-2 lg:col-span-3" : "sm:col-span-1 lg:col-span-1"))}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 lg:gap-5"
-        >
-          {CATEGORIES.map((cat, i) => {
+        {/* 6 Minimal Category Cards — 1:1 squares, one row, 3D lift + cursor glare */}
+        <LiftGrid columns={6} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
+          {CATEGORIES.map((cat) => {
             const IconComponent = cat.icon
-            const wide = i < 2
             return (
               <Link key={cat.id} href={cat.href} className="group block h-full">
                 <GlareCard className="h-full rounded-xl">
-                  <Card
-                    className={`group/card relative overflow-hidden rounded-xl bg-[#111111] p-0 text-white shadow-md transition-shadow duration-200 hover:shadow-2xl ${
-                      wide ? "aspect-[2/1] sm:aspect-[3/1] lg:aspect-[3/1]" : "aspect-square"
-                    }`}
-                  >
+                  <Card className="group/card relative aspect-square overflow-hidden rounded-xl bg-[#111111] p-0 text-white shadow-md transition-shadow duration-200 hover:shadow-2xl">
                     <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover/card:scale-110"
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-200 group-hover/card:scale-110"
                       style={{ backgroundImage: `url('${cat.bgImage}')` }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/50 to-black/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/60 to-black/20" />
 
-                    <CardContent
-                      className={`relative z-10 flex h-full items-center gap-4 p-5 text-left ${
-                        wide ? "sm:flex-row lg:flex-row" : "flex-col justify-center text-center"
-                      }`}
-                    >
-                      <div className={`orbital-ring flex items-center justify-center rounded-2xl border border-white/20 bg-white/15 shadow-md backdrop-blur-md transition-colors group-hover/card:border-amber-500 group-hover/card:bg-amber-500 ${wide ? "h-14 w-14 shrink-0" : "h-10 w-10"}`}>
-                        <IconComponent className={`text-amber-300 transition-colors group-hover/card:text-white ${wide ? "h-6 w-6" : "h-5 w-5"}`} />
+                    <CardContent className="relative z-10 flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/15 shadow-md backdrop-blur-md transition-colors group-hover/card:border-amber-500 group-hover/card:bg-amber-500">
+                        <IconComponent className="h-5 w-5 text-amber-300 transition-colors group-hover/card:text-white" />
                       </div>
-                      <div className={wide ? "min-w-0" : "flex flex-col items-center"}>
-                        <h3 className={`font-semibold leading-tight tracking-[-0.01em] text-white ${wide ? "text-lg sm:text-xl" : "text-sm"}`}>
-                          {cat.title}
-                        </h3>
-                        <p className={`font-semibold text-amber-400 ${wide ? "mt-1 text-sm" : "mt-1 text-xs"}`}>{cat.price}</p>
-                      </div>
+                      <h3 className="text-sm font-semibold leading-tight tracking-[-0.01em] text-white">
+                        {cat.title}
+                      </h3>
+                      <p className="text-xs font-semibold text-amber-400">{cat.price}</p>
                     </CardContent>
                   </Card>
                 </GlareCard>
