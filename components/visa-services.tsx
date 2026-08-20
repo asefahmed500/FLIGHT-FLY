@@ -54,6 +54,9 @@ export function VisaServices({ onBookItem }: VisaServicesProps) {
                     <Clock className="mr-1 h-3 w-3 text-amber-400" /> {visa.badge}
                   </Badge>
                   {visa.deal && <DealChip className="absolute right-4 top-4" />}
+                  <span className="visa-stamp absolute bottom-3 right-3 rounded-full border-2 border-amber-400/70 bg-black/40 px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-amber-300 backdrop-blur-sm">
+                    Approved
+                  </span>
                 </div>
 
 <CardContent className="flex flex-1 flex-col justify-between p-5">

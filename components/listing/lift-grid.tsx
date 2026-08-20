@@ -9,6 +9,8 @@ interface LiftGridProps {
   glow?: boolean
   glowColor?: string
   perspective?: number
+  cellClassName?: string
+  cellClassNames?: string[]
 }
 
 // Hover-reactive grid — adapted from Originkit's interactive-grid: the hovered
@@ -23,6 +25,8 @@ export function LiftGrid({
   glow = true,
   glowColor = "rgba(79, 70, 229, 0.45)",
   perspective = 1600,
+  cellClassName = "",
+  cellClassNames,
 }: LiftGridProps) {
   const [hovered, setHovered] = useState<number | null>(null)
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -72,7 +76,7 @@ export function LiftGrid({
                   key={i}
                   onPointerEnter={() => onEnter(i)}
                   onPointerLeave={onLeave}
-                  className="lift-grid-cell will-change-transform"
+                  className={`lift-grid-cell will-change-transform ${cellClassName} ${cellClassNames?.[i] ?? ""}`}
                   style={
                     {
                       "--lift-z": glow ? "3px" : "0px",

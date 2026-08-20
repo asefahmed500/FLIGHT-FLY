@@ -54,9 +54,14 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
                     {ticket.badge}
                   </Badge>
                   {ticket.deal && <DealChip className="absolute right-4 top-4" />}
+                  <div className="absolute bottom-3 right-3 flex gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
+                  </div>
                 </div>
 
-<CardContent className="flex flex-1 flex-col justify-between p-5">
+<CardContent className="ticket-stub flex flex-1 flex-col justify-between p-5">
                   <Link href={`/catalog/${ticket.id}`}>
                     <h3 className="text-base font-semibold leading-snug tracking-[-0.01em] text-[#111111] transition-colors group-hover:text-[#4F46E5] line-clamp-1">
                       {ticket.title}

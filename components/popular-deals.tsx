@@ -105,13 +105,13 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
           </div>
         ) : (
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-            {filteredDeals.map((deal, i) => (
-            <Reveal key={deal.id} variant="scale" delay={(i % 3) * 80} className="h-full">
+            {filteredDeals.map((deal, i) => {
+            const featured = i === 0
+            return (
+            <Reveal key={deal.id} variant="scale" delay={(i % 3) * 80} className={featured ? "md:col-span-2 lg:col-span-2 h-full" : "h-full"}>
             <TiltCard className="h-full">
-            <Card className="rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden bg-white group flex flex-col justify-between">
-
-              
-              <div className="relative h-52 overflow-hidden">
+            <Card className={`rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden bg-white group flex ${featured ? "flex-col lg:flex-row" : "flex-col justify-between"}`}>
+              <div className={`relative overflow-hidden ${featured ? "h-56 lg:h-auto lg:w-1/2 shrink-0" : "h-52"}`}>
                 <img 
                   src={deal.image} 
                   alt={deal.title} 
@@ -140,7 +140,7 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
 
               <CardContent className="p-5 flex-1 flex flex-col justify-between">
                 <Link href={`/deals/${deal.id}`} className="block">
-                  <h3 className="text-base font-semibold text-[#111111] leading-snug group-hover:text-[#4F46E5] transition-colors tracking-[-0.01em] line-clamp-1">
+                  <h3 className={`font-semibold text-[#111111] leading-snug group-hover:text-[#4F46E5] transition-colors tracking-[-0.01em] line-clamp-1 ${featured ? "text-xl" : "text-base"}`}>
                     {deal.title}
                   </h3>
                 </Link>
@@ -148,7 +148,7 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
                 <div className="pt-3 mt-3 border-t border-slate-100">
                   <div className="mb-3 flex items-baseline gap-2">
                     <span className="text-xs text-slate-400 line-through font-normal">{deal.originalPrice}</span>
-                    <span className="text-lg font-semibold text-[#4F46E5]">{deal.discountPrice}</span>
+                    <span className={`font-semibold text-[#4F46E5] ${featured ? "text-2xl" : "text-lg"}`}>{deal.discountPrice}</span>
                   </div>
                   <CardCta
                     detailsHref={`/deals/${deal.id}`}
@@ -178,7 +178,8 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
             </Card>
             </TiltCard>
             </Reveal>
-          ))}
+            )
+            })}
           </div>
         )}
 
