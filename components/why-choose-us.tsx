@@ -5,8 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useCatalog } from "@/lib/firestore-data"
 import { resolveFeatureIcon } from "@/lib/feature-icons"
 import { Reveal } from "@/components/motion/reveal"
-import { GlareCard } from "@/components/listing/glare-card"
-import { LiftGrid } from "@/components/listing/lift-grid"
+import { SpotlightCard } from "@/components/listing/spotlight-card"
 
 export function WhyChooseUs() {
   const { catalog, loading } = useCatalog()
@@ -42,12 +41,12 @@ export function WhyChooseUs() {
             ))}
           </div>
         ) : features.length === 0 ? null : (
-          <LiftGrid columns={6} glowColor="rgba(217, 119, 6, 0.35)" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
             {features.map((feat, idx) => {
             const IconComponent = resolveFeatureIcon(feat.icon)
             return (
               <Reveal key={feat.id} variant="scale" delay={(idx % 6) * 60} className="h-full">
-                <GlareCard className="h-full rounded-xl">
+                <SpotlightCard className="h-full rounded-xl" spotlightColor="rgba(79, 70, 229, 0.18)">
                 <div className="flex h-full flex-col rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl group p-5">
                   <div className="w-10 h-10 rounded-lg bg-[#111111] text-amber-400 flex items-center justify-center mb-4 group-hover:bg-[#4F46E5] group-hover:text-white transition-colors shadow-md">
                     <IconComponent className="w-5 h-5" />
@@ -59,11 +58,11 @@ export function WhyChooseUs() {
                     {feat.description}
                   </p>
                 </div>
-                </GlareCard>
+                </SpotlightCard>
               </Reveal>
             )
           })}
-          </LiftGrid>
+          </div>
         )}
 
       </div>

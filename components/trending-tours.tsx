@@ -106,8 +106,8 @@ export function TrendingTours({ onBookItem }: TrendingToursProps) {
               />
             </div>
             {badges.length > 0 && (
-              <Tabs value={filter} onValueChange={setFilter} className="w-full sm:w-auto">
-                <TabsList className="flex-nowrap overflow-x-auto bg-slate-200/70 p-1 rounded-xl w-full sm:w-auto whitespace-nowrap no-scrollbar">
+              <Tabs value={filter} onValueChange={setFilter} className="w-full sm:w-auto min-w-0 max-w-full">
+                <TabsList className="flex-nowrap overflow-x-auto bg-slate-200/70 p-1 rounded-xl w-full sm:w-auto whitespace-nowrap no-scrollbar max-w-full">
                   <TabsTrigger value="all" className="rounded-lg text-xs font-medium px-3 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">All</TabsTrigger>
                   {badges.map((b) => (
                     <TabsTrigger key={b} value={b} className="rounded-lg text-xs font-medium px-3 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">{b}</TabsTrigger>

@@ -68,8 +68,8 @@ export function PopularDeals({ onBookItem }: PopularDealsProps) {
 
           {/* Filter Tabs */}
           <div className="mt-4 md:mt-0">
-            <Tabs defaultValue="all" value={filter} onValueChange={setFilter} className="w-auto">
-              <TabsList className="flex-nowrap overflow-x-auto bg-slate-200/70 p-1 rounded-xl whitespace-nowrap no-scrollbar">
+            <Tabs defaultValue="all" value={filter} onValueChange={setFilter} className="w-full sm:w-auto min-w-0 max-w-full">
+              <TabsList className="flex-nowrap overflow-x-auto bg-slate-200/70 p-1 rounded-xl whitespace-nowrap no-scrollbar w-full sm:w-auto max-w-full">
                 <TabsTrigger value="all" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">All Deals</TabsTrigger>
                 <TabsTrigger value="flights" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Flights</TabsTrigger>
                 <TabsTrigger value="hotels" className="rounded-lg text-xs font-medium px-4 py-2 data-[state=active]:bg-white data-[state=active]:text-[#111111] whitespace-nowrap">Hotels</TabsTrigger>

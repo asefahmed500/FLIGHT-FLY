@@ -109,9 +109,9 @@ export function Footer() {
       <div className="bg-[#0A0A0A] py-6 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           
-          <div className="flex items-center gap-6 text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-slate-400">
             <span className="text-slate-300 font-semibold">Accepted Payments:</span>
-            <div className="flex items-center gap-3 text-slate-300 font-bold">
+            <div className="flex flex-wrap items-center gap-3 text-slate-300 font-bold">
               <span className="bg-white/10 px-2 py-1 rounded text-[10px]">VISA</span>
               <span className="bg-white/10 px-2 py-1 rounded text-[10px]">MASTERCARD</span>
               <span className="bg-white/10 px-2 py-1 rounded text-[10px]">AMEX</span>

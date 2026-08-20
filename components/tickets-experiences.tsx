@@ -10,7 +10,7 @@ import { useCatalog } from "@/lib/firestore-data"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
 import { DealChip } from "@/components/deal-chip"
-import { TiltCard } from "@/components/listing/tilt-card"
+import { GlareCard } from "@/components/listing/glare-card"
 
 interface TicketsExperiencesProps {
   onBookItem: (item: BookingItemInfo) => void
@@ -45,8 +45,8 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
           <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
             {tickets.map((ticket, i) => (
             <Reveal key={ticket.id} variant="scale" delay={i * 80} className="h-full">
-              <TiltCard className="h-full">
-              <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl">
+              <GlareCard className="h-full rounded-xl" glareColor="rgba(217, 119, 6, 0.22)">
+              <Card className="edge-glow group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm">
                 <div className="relative h-44 overflow-hidden">
                   <img src={ticket.image} alt={ticket.title} className="img-zoom h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -80,7 +80,7 @@ export function TicketsExperiences({ onBookItem }: TicketsExperiencesProps) {
                   </div>
                 </CardContent>
               </Card>
-              </TiltCard>
+              </GlareCard>
             </Reveal>
           ))}
           </div>
