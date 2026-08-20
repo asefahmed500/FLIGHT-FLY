@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { GlobalSearch } from "@/components/global-search"
 import { useAuth } from "@/lib/auth-context"
 import { Plane, ChevronDown, Menu, User, PhoneCall, Sparkles, ShieldCheck, LayoutDashboard, LogOut, ChevronRight } from "lucide-react"
 import { FlightFlyMark } from "@/components/icons"
@@ -169,8 +170,11 @@ export function Navbar() {
               })}
             </nav>
 
+            {/* Global live search (visible from lg) */}
+            <GlobalSearch className="hidden w-52 transition-[width] duration-200 focus-within:w-72 lg:block" />
+
             {/* Right Action Buttons (Sign Up VIP removed) */}
-            <div className="hidden items-center gap-2 md:flex">
+            <div className="hidden shrink-0 items-center gap-2 md:flex">
               {user ? (
                 <div className="flex items-center gap-2">
                   <Button render={<Link href={dashboardHref} />} className="flex h-10 items-center gap-2 rounded-xl bg-[#4F46E5] px-3 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#111111] sm:px-4 sm:text-sm">
@@ -182,8 +186,11 @@ export function Navbar() {
                   </Button>
                 </div>
               ) : (
-                <Button render={<Link href="/login?tab=login" />} variant="ghost" className="h-10 px-3 text-sm font-medium text-[#111111] hover:bg-slate-100 hover:text-[#4F46E5]">
-                  <User className="mr-1.5 h-4 w-4 text-slate-500" /> Login
+                <Button
+                  render={<Link href="/login?tab=login" />}
+                  className="flex h-10 items-center gap-2 rounded-xl border-2 border-amber-300 bg-[#D97706] px-4 text-sm font-bold text-white shadow-md shadow-amber-600/20 transition-all hover:bg-[#B45309] hover:border-amber-200 active:scale-[0.97]"
+                >
+                  <User className="h-4 w-4" /> Login
                 </Button>
               )}
             </div>
@@ -208,6 +215,8 @@ export function Navbar() {
                         <Plane className="h-5 w-5 text-[#4F46E5]" /> FLIGHTFLY
                       </SheetTitle>
                     </SheetHeader>
+
+                    <GlobalSearch className="mb-4" />
 
                     <nav className="flex flex-col gap-1 text-base font-medium text-[#111111]">
                       {NAV_LINKS.map((link) => (

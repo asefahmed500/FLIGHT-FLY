@@ -1,6 +1,7 @@
 "use client"
 
 import { Link2 } from "lucide-react"
+import { LiftGrid } from "@/components/listing/lift-grid"
 
 interface PartnerLogo {
   name: string
@@ -94,12 +95,18 @@ export function TrustedBy() {
           <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-slate-400">
             <Link2 className="h-3.5 w-3.5" /> Trusted by · As seen in
           </p>
-          <div className="grid w-full max-w-4xl grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-6">
+          {/* Logo wall — Originkit interactive-grid: hovered logo lifts in 3D
+              and its orthogonal neighbours tilt up with it. */}
+          <LiftGrid
+            columns={6}
+            glow={false}
+            className="grid w-full max-w-4xl grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-6"
+          >
             {PARTNERS.map((partner) => (
               <div
                 key={partner.name}
                 title={partner.name}
-                className="group flex items-center justify-center"
+                className="group flex items-center justify-center rounded-lg p-2"
               >
                 <svg
                   viewBox="0 0 100 24"
@@ -117,7 +124,7 @@ export function TrustedBy() {
                 </svg>
               </div>
             ))}
-          </div>
+          </LiftGrid>
         </div>
       </div>
     </section>

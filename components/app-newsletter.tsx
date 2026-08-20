@@ -7,6 +7,7 @@ import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Mail, CheckCircle2, ArrowRight, Plane } from "lucide-react"
+import { Stardust } from "@/components/originkit/ui/stardust"
 
 // Zod Newsletter Schema
 const newsletterSchema = z.object({
@@ -57,6 +58,7 @@ export function AppNewsletter() {
       {/* Decorative ambient lighting */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[#4F46E5]/25 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#D97706]/15 rounded-full blur-3xl pointer-events-none" />
+      <Stardust />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         

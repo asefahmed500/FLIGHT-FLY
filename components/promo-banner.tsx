@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Flame, Clock, Copy, Check, Tag } from "lucide-react"
 import { Reveal } from "@/components/motion/reveal"
+import { CurvedMarquee } from "@/components/originkit/ui/curved-marquee"
 
 interface FeaturedPromo {
   code: string
@@ -134,6 +135,10 @@ export function PromoBanner() {
 
         </div>
 
+        {/* Curved marquee tagline — Originkit curvedmarquee, draggable */}
+        <div className="mt-2 text-amber-300/80">
+          <CurvedMarquee text="Fly private · Stay longer · Live deeper" />
+        </div>
       </div>
     </div>
   )

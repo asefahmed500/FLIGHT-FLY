@@ -10,7 +10,7 @@ import { ListingCard, type ListingCardData } from "@/components/listing/listing-
 import { Reveal } from "@/components/motion/reveal"
 import { useCatalog } from "@/lib/firestore-data"
 import { useBookingStore } from "@/lib/stores/booking-store"
-import { ChevronRight, Star, ShieldCheck, CalendarCheck, Clock, Users, MapPin, BadgeCheck } from "lucide-react"
+import { ChevronRight, Star, ShieldCheck, CalendarCheck, Clock, Users, MapPin, BadgeCheck, Check } from "lucide-react"
 import type { CatalogItem, CatalogKind, BookingItemType } from "@/lib/types"
 
 const KIND_TYPE: Record<CatalogKind, BookingItemType> = {
@@ -34,6 +34,19 @@ const TRUST = [
   { icon: ShieldCheck, label: "Verified & licensed operator" },
   { icon: BadgeCheck, label: "Free cancellation up to 48h" },
   { icon: CalendarCheck, label: "Instant confirmation" },
+]
+
+const STEPS = [
+  { n: "01", t: "Reserve in 2 minutes", d: "Book now and pay by card or corporate invoice — no account needed to hold your spot." },
+  { n: "02", t: "Instant confirmation", d: "Your reservation appears in your dashboard and moves from pending to approved, usually within 2 minutes." },
+  { n: "03", t: "Travel with QR passes", d: "E-tickets and QR passes are generated in your dashboard — download or scan them anytime." },
+]
+
+const KNOW_BEFORE = [
+  "Bring a valid passport or government ID matching your booking name",
+  "Arrive 15 minutes early for guided tours and timed entry",
+  "Dress code is smart-casual; comfortable shoes recommended",
+  "Children under 12 must be accompanied by an adult",
 ]
 
 export default function CatalogDetailPage() {
@@ -130,6 +143,7 @@ export default function CatalogDetailPage() {
                 </div>
                 <div className="flex items-center gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-600">
                   <Star className="h-4 w-4 fill-amber-400 stroke-amber-400" /> {item.rating}
+                  {item.reviews && <span className="font-normal text-slate-400">({item.reviews})</span>}
                 </div>
               </div>
 
@@ -171,6 +185,31 @@ export default function CatalogDetailPage() {
                     ))}
                 </ul>
               </div>
+
+              <div className="mt-6 border-t border-slate-100 pt-6">
+                <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">How booking works</h2>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {STEPS.map((s) => (
+                    <div key={s.n} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+                      <span className="text-xs font-bold tracking-widest text-[#4F46E5]">{s.n}</span>
+                      <p className="mt-1.5 text-sm font-semibold text-slate-800">{s.t}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">{s.d}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 border-t border-slate-100 pt-6">
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">Know before you go</h2>
+                <ul className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                  {KNOW_BEFORE.map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
 
@@ -188,6 +227,21 @@ export default function CatalogDetailPage() {
                 {item.deal && (
                   <Badge className="bg-amber-500 font-semibold text-white">Save up to 25%</Badge>
                 )}
+              </div>
+
+              <div className="mt-4 space-y-2 rounded-xl bg-slate-50 p-4 text-sm">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Base price</span>
+                  <span className="font-medium text-slate-800">{item.price}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Taxes &amp; service fees</span>
+                  <span className="font-medium text-emerald-600">Included</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between border-t border-slate-200/80 pt-2.5">
+                  <span className="font-semibold text-slate-800">Total due today</span>
+                  <span className="text-lg font-semibold text-[#4F46E5]">{item.price}</span>
+                </div>
               </div>
 
               <Button

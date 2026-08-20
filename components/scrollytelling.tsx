@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Compass, Gem, TicketCheck, Crown } from "lucide-react"
 import { GlareCard } from "@/components/listing/glare-card"
+import { BlockTextReveal } from "@/components/originkit/ui/block-text-reveal"
 
 interface Step {
   id: string
@@ -206,7 +207,12 @@ export function ScrollytellingSection() {
                   <h3 className="text-2xl font-semibold tracking-[-0.01em] text-white sm:text-3xl">
                     {activeStep.title}
                   </h3>
-                  <p className="mt-2 text-sm font-normal leading-relaxed text-slate-300">{activeStep.description}</p>
+                  <BlockTextReveal
+                    text={activeStep.description}
+                    progress={local}
+                    className="mt-2 text-sm font-normal leading-relaxed text-slate-300"
+                    activeClass="text-white"
+                  />
                 </div>
               </div>
             </div>

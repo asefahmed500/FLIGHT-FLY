@@ -14,6 +14,7 @@ import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
 import { DealChip } from "@/components/deal-chip"
 import { TiltCard } from "@/components/listing/tilt-card"
+import { ImageSpotlight } from "@/components/originkit/ui/image-spotlight"
 
 interface FeaturedDestinationsProps {
   onBookItem: (item: BookingItemInfo) => void
@@ -105,11 +106,13 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
               <TiltCard className="h-full">
                 <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl">
                   <div className="relative h-56 shrink-0 overflow-hidden">
-                    <img
-                      src={dest.image}
-                      alt={dest.name}
-                      className="img-zoom h-full w-full object-cover"
-                    />
+                    <ImageSpotlight className="h-full w-full">
+                      <img
+                        src={dest.image}
+                        alt={dest.name}
+                        className="img-zoom h-full w-full object-cover"
+                      />
+                    </ImageSpotlight>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                     <div className="absolute top-4 left-4 flex items-center gap-2">

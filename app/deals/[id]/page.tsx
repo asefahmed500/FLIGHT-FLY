@@ -33,6 +33,21 @@ const INCLUSIONS = [
   "Premium partner upgrades where available",
 ]
 
+const CATEGORY_HIGHLIGHTS: Record<DealCategory, string[]> = {
+  flights: ["Round-trip premium cabin fares", "Airport lounge access included", "Priority check-in & boarding", "Generous business baggage allowance"],
+  hotels: ["5-star handpicked accommodation", "Daily breakfast for two guests", "Late checkout where available", "Resort credits on select stays"],
+  packages: ["Curated multi-day itinerary", "All internal transfers included", "Handpicked hotels each night", "Guided experiences throughout"],
+  tours: ["Expert local guide throughout", "All entry tickets included", "Small-group or private option", "Hotel pickup and drop-off"],
+  visa: ["Document checklist & review", "Embassy appointment booking", "Application tracking to decision", "Cover letter & insurance guidance"],
+  tickets: ["Guaranteed entry, skip the line", "E-ticket delivered instantly", "Premium or VIP seating options", "Free reschedule on select events"],
+}
+
+const STEPS = [
+  { n: "01", t: "Reserve in 2 minutes", d: "Book now and pay by card or corporate invoice — no account needed to lock the fare." },
+  { n: "02", t: "Instant confirmation", d: "Your reservation lands in your dashboard and moves from pending to approved, usually within 2 minutes." },
+  { n: "03", t: "Travel with QR e-tickets", d: "Boarding passes and QR tickets are generated in your dashboard — download or scan them anytime." },
+]
+
 export default function DealDetailPage() {
   const params = useParams<{ id: string }>()
   const id = params?.id ?? ""
@@ -108,12 +123,19 @@ export default function DealDetailPage() {
   }
 
   const type = CATEGORY_TYPE[deal.category] ?? "package"
+  const priceNum = (p: string) => parseFloat(p.replace(/[^0-9.]/g, "")) || 0
   const savings = (() => {
-    const a = parseFloat(deal.originalPrice.replace(/[^0-9.]/g, ""))
-    const b = parseFloat(deal.discountPrice.replace(/[^0-9.]/g, ""))
-    if (!a || !b) return null
+    const a = priceNum(deal.originalPrice)
+    const b = priceNum(deal.discountPrice)
+    if (!a || !b || a <= b) return null
     return Math.round(((a - b) / a) * 100)
   })()
+  const savedAmount = (() => {
+    const a = priceNum(deal.originalPrice)
+    const b = priceNum(deal.discountPrice)
+    return a > b ? `$${Math.round(a - b)}` : null
+  })()
+  const highlights = CATEGORY_HIGHLIGHTS[deal.category] ?? CATEGORY_HIGHLIGHTS.packages
 
   const related = deals
     .filter((d) => d.id !== deal.id && d.category === deal.category)
@@ -203,6 +225,31 @@ export default function DealDetailPage() {
                   ))}
                 </ul>
               </div>
+
+              <div className="mt-6 border-t border-slate-100 pt-6">
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">Deal highlights</h2>
+                <ul className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                  {highlights.map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <Star className="mt-0.5 h-4 w-4 shrink-0 fill-amber-400 stroke-amber-400" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-6 border-t border-slate-100 pt-6">
+                <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">How this deal works</h2>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {STEPS.map((s) => (
+                    <div key={s.n} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+                      <span className="text-xs font-bold tracking-widest text-[#4F46E5]">{s.n}</span>
+                      <p className="mt-1.5 text-sm font-semibold text-slate-800">{s.t}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">{s.d}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -221,7 +268,28 @@ export default function DealDetailPage() {
                   <p className="text-3xl font-semibold text-[#B45309]">{deal.discountPrice}</p>
                   <p className="text-sm font-medium text-slate-400 line-through">{deal.originalPrice}</p>
                 </div>
-                <Badge className="bg-amber-500 font-semibold text-white">Was {savings}% off</Badge>
+                {savedAmount && (
+                  <Badge className="bg-emerald-100 font-semibold text-emerald-700">You save {savedAmount}</Badge>
+                )}
+              </div>
+
+              <div className="mt-4 space-y-2 rounded-xl bg-white/70 p-4 text-sm">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Fare / stay price</span>
+                  <span className="font-medium text-slate-800">{deal.discountPrice}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Taxes &amp; service fees</span>
+                  <span className="font-medium text-emerald-600">Included</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>24/7 concierge support</span>
+                  <span className="font-medium text-emerald-600">Included</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between border-t border-slate-200/80 pt-2.5">
+                  <span className="font-semibold text-slate-800">Total due today</span>
+                  <span className="text-lg font-semibold text-[#B45309]">{deal.discountPrice}</span>
+                </div>
               </div>
 
               <Button

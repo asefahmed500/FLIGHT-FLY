@@ -39,7 +39,9 @@ function DealListingInner({ category, eyebrow, title, description, icon: Icon, a
   const [searchMeta, setSearchMeta] = useState<{ from?: string; to?: string; q?: string; checkin?: string; checkout?: string } | null>(null)
 
   // Consume hero-search params (q/from/to/checkin/checkout) once on mount.
-  // A `q` param from the URL wins over the page's initialQuery.
+  // A `q` param wins; flights searches carry no `q`, so their destination
+  // (`to`) drives the filter instead — the route's city tokens match deal
+  // titles/subtitles ("New York → Dubai" style).
   useEffect(() => {
     const t = setTimeout(() => {
       const q = searchParams.get("q") ?? ""
@@ -47,7 +49,8 @@ function DealListingInner({ category, eyebrow, title, description, icon: Icon, a
       const to = searchParams.get("to") ?? undefined
       const checkin = searchParams.get("checkin") ?? undefined
       const checkout = searchParams.get("checkout") ?? undefined
-      if (q) setQuery(q)
+      const effective = q || to || ""
+      if (effective) setQuery(effective)
       if (from || to || q || checkin) setSearchMeta({ from, to, q: q || undefined, checkin, checkout })
     }, 0)
     return () => clearTimeout(t)

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { GlassButton } from "@/components/originkit/ui/glass-button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -242,13 +242,14 @@ export function HeroSearch() {
                 </div>
 
                 <div className="md:col-span-12 pt-3">
-                  <Button
+                  <GlassButton
                     type="submit"
-                    className="w-full h-14 bg-[#D97706] hover:bg-[#B45309] text-white font-semibold text-base rounded-2xl shadow-xl shadow-amber-600/25 transition-all flex items-center justify-center gap-2 group"
+                    variant="amber"
+                    className="text-base font-semibold"
                   >
-                    <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <Search className="w-5 h-5" />
                     Search Executive Flights Now
-                  </Button>
+                  </GlassButton>
                 </div>
               </form>
             </TabsContent>
@@ -313,12 +314,9 @@ export function HeroSearch() {
                 </div>
 
                 <div className="md:col-span-12 pt-3">
-                  <Button
-                    type="submit"
-                    className="w-full h-14 bg-[#D97706] hover:bg-[#B45309] text-white font-semibold text-base rounded-2xl shadow-xl shadow-amber-600/25 transition-all flex items-center justify-center gap-2"
-                  >
+                  <GlassButton type="submit" variant="amber" className="text-base font-semibold">
                     <Search className="w-5 h-5" /> Search 5-Star Hotels & Luxury Resorts
-                  </Button>
+                  </GlassButton>
                 </div>
               </form>
             </TabsContent>
@@ -340,9 +338,9 @@ export function HeroSearch() {
                 </div>
 
                 <div className="md:col-span-12 pt-3">
-                  <Button type="submit" className="w-full h-14 bg-[#D97706] hover:bg-[#B45309] text-white font-semibold text-base rounded-2xl shadow-xl shadow-amber-600/25">
+                  <GlassButton type="submit" variant="amber" className="text-base font-semibold">
                     <Compass className="w-5 h-5" /> Find Exclusive Guided Experiences
-                  </Button>
+                  </GlassButton>
                 </div>
               </form>
             </TabsContent>
@@ -364,9 +362,9 @@ export function HeroSearch() {
                 </div>
 
                 <div className="md:col-span-12 pt-3">
-                  <Button type="submit" className="w-full h-14 bg-[#D97706] hover:bg-[#B45309] text-white font-semibold text-base rounded-2xl shadow-xl shadow-amber-600/25">
+                  <GlassButton type="submit" variant="amber" className="text-base font-semibold">
                     <Package className="w-5 h-5" /> Search All-Inclusive Luxury Packages
-                  </Button>
+                  </GlassButton>
                 </div>
               </form>
             </TabsContent>

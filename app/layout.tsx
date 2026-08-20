@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { AuthProvider } from "@/lib/auth-context"
 import { Chatbot } from "@/components/chatbot"
@@ -31,13 +30,11 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-[#FAFAFA] text-[#111111] selection:bg-[#4F46E5] selection:text-white">
         <AuthProvider>
-          <ThemeProvider>
-            <TooltipProvider>
-              {children}
-              <Chatbot />
-              <BookingProvider />
-            </TooltipProvider>
-          </ThemeProvider>
+          <TooltipProvider>
+            {children}
+            <Chatbot />
+            <BookingProvider />
+          </TooltipProvider>
         </AuthProvider>
       </body>
     </html>

@@ -61,7 +61,7 @@ export default function DashboardProfilePage() {
   ]
 
   return (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-[-0.01em]">Account &amp; Security Settings</h1>
         <p className="text-sm text-muted-foreground">Manage your profile and review your role-based access.</p>

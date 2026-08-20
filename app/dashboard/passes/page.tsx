@@ -143,9 +143,9 @@ export default function DashboardPassesPage() {
       <DataErrorBanner error={error} onRetry={refresh} context="your passes" />
 
       {loading ? (
-        <div className="flex flex-col gap-4">
-          <Skeleton className="h-56 w-full max-w-2xl" />
-          <Skeleton className="h-56 w-full max-w-2xl" />
+        <div className="grid gap-4 xl:grid-cols-2">
+          <Skeleton className="h-56 w-full" />
+          <Skeleton className="h-56 w-full" />
         </div>
       ) : passes.length === 0 ? (
         <Card className="max-w-lg rounded-xl">
@@ -158,7 +158,7 @@ export default function DashboardPassesPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="grid gap-4 xl:grid-cols-2">
           {passes.map((pass) => (
             <PassCard key={pass.id} pass={pass} email={user?.email} />
           ))}
