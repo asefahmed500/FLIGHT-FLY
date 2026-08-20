@@ -5,7 +5,7 @@ import { Star, Quote, ShieldCheck, Sparkles } from "lucide-react"
 import { useCatalog } from "@/lib/firestore-data"
 import type { CatalogItem } from "@/lib/types"
 import { Reveal } from "@/components/motion/reveal"
-import { RoundCarousel } from "@/components/listing/round-carousel"
+import { TiltCard } from "@/components/listing/tilt-card"
 
 export function Testimonials() {
   const { catalog, loading } = useCatalog()
@@ -28,7 +28,7 @@ export function Testimonials() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <Reveal className="text-center max-w-3xl mx-auto mb-12">
+        <Reveal className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#4F46E5] mb-3 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100">
             <Sparkles className="w-3.5 h-3.5" /> Client Reviews & Ratings
           </div>
@@ -40,13 +40,13 @@ export function Testimonials() {
           </p>
         </Reveal>
 
-        {/* 3D rotating ring of testimonials — drag to spin, auto-rotates */}
-        <Reveal variant="scale">
-          <RoundCarousel
-            slides={testimonials.map((t) => ({
-              key: t.id,
-              content: (
-                <Card className="flex h-full w-full flex-col justify-between rounded-[22px] bg-[#FAFAFA] p-6">
+        {/* Testimonials Grid — consistent tilt cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+          {testimonials.map((t, i) => (
+            <Reveal key={t.id} variant="scale" delay={i * 80} className="h-full">
+              <TiltCard className="h-full" maxTilt={5}>
+                <Card className="flex h-full flex-col justify-between rounded-xl bg-[#FAFAFA] p-7 shadow-sm transition-shadow duration-200 hover:shadow-lg">
+
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-1 text-amber-400">
@@ -77,14 +77,10 @@ export function Testimonials() {
                     </div>
                   </div>
                 </Card>
-              ),
-            }))}
-          />
-        </Reveal>
-
-        <p className="mt-4 text-center text-xs text-slate-400 font-normal">
-          Drag to spin the ring
-        </p>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
 
       </div>
     </section>

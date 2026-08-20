@@ -13,7 +13,7 @@ import type { CatalogItem } from "@/lib/types"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
 import { DealChip } from "@/components/deal-chip"
-import { CoverflowCarousel } from "@/components/listing/coverflow"
+import { TiltCard } from "@/components/listing/tilt-card"
 
 interface FeaturedDestinationsProps {
   onBookItem: (item: BookingItemInfo) => void
@@ -98,17 +98,12 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
           </p>
         </Reveal>
 
-        {/* 3D Coverflow — active card in the spotlight, peers tilted back */}
-        <Reveal variant="scale">
-          <CoverflowCarousel
-            autoplay
-            cardWidth={380}
-            cardHeight={400}
-            slides={destinations.map((dest) => ({
-              key: dest.id,
-              content: (
-                <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm">
-                  {/* Destination Image & Badges */}
+        {/* Destinations Grid — consistent tilt cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+          {destinations.map((dest, i) => (
+            <Reveal key={dest.id} variant="scale" delay={(i % 3) * 80} className="h-full">
+              <TiltCard className="h-full">
+                <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl">
                   <div className="relative h-56 shrink-0 overflow-hidden">
                     <img
                       src={dest.image}
@@ -146,7 +141,6 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
                     </div>
                   </div>
 
-                  {/* Card Content & Price */}
                   <CardContent className="p-5 flex flex-col justify-between gap-3 bg-white">
                     <div>
                       <span className="text-[10px] text-slate-400 font-medium uppercase block">Starting Price</span>
@@ -171,10 +165,10 @@ export function FeaturedDestinations({ onBookItem }: FeaturedDestinationsProps) 
                     />
                   </CardContent>
                 </Card>
-              ),
-            }))}
-          />
-        </Reveal>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
 
       </div>
     </section>

@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useCatalog } from "@/lib/firestore-data"
 import { resolveFeatureIcon } from "@/lib/feature-icons"
 import { Reveal } from "@/components/motion/reveal"
-import { SpotlightCard } from "@/components/listing/spotlight-card"
+import { TiltCard } from "@/components/listing/tilt-card"
 
 export function WhyChooseUs() {
   const { catalog, loading } = useCatalog()
@@ -46,7 +46,7 @@ export function WhyChooseUs() {
             const IconComponent = resolveFeatureIcon(feat.icon)
             return (
               <Reveal key={feat.id} variant="scale" delay={(idx % 6) * 60} className="h-full">
-                <SpotlightCard className="h-full rounded-xl" spotlightColor="rgba(79, 70, 229, 0.18)">
+                <TiltCard className="h-full rounded-xl" maxTilt={8}>
                 <div className="flex h-full flex-col rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl group p-5">
                   <div className="w-10 h-10 rounded-lg bg-[#111111] text-amber-400 flex items-center justify-center mb-4 group-hover:bg-[#4F46E5] group-hover:text-white transition-colors shadow-md">
                     <IconComponent className="w-5 h-5" />
@@ -58,7 +58,7 @@ export function WhyChooseUs() {
                     {feat.description}
                   </p>
                 </div>
-                </SpotlightCard>
+                </TiltCard>
               </Reveal>
             )
           })}

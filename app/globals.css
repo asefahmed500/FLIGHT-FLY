@@ -12,47 +12,6 @@
   }
 }
 
-/* Shine sweep — a light band sweeps diagonally across the card on hover
-   (Originkit shine-card's gloss sweep, CSS-only). */
-.shine-sweep {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.shine-sweep::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    115deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.35) 45%,
-    rgba(255, 255, 255, 0.55) 50%,
-    rgba(255, 255, 255, 0.35) 55%,
-    transparent 80%
-  );
-  transform: translateX(-130%) skewX(-12deg);
-  transition: transform 0.7s var(--ease-out);
-  pointer-events: none;
-}
-.shine-sweep:hover::after {
-  transform: translateX(130%) skewX(-12deg);
-}
-
-/* Edge glow — a coloured rim light that fades in on hover (used for the
-   Tickets experience cards to distinguish them from the tilt sections). */
-.edge-glow {
-  position: relative;
-  transition: box-shadow 0.3s var(--ease-standard);
-}
-.edge-glow:hover {
-  box-shadow:
-    0 0 0 1.5px rgba(217, 119, 6, 0.55),
-    0 0 24px -4px rgba(217, 119, 6, 0.35),
-    0 18px 40px -14px rgba(17, 17, 17, 0.25);
-}
-
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);

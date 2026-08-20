@@ -3,8 +3,7 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plane, Building2, Compass, Package, Car, Ship, Sparkles } from "lucide-react"
-import { GlareCard } from "@/components/listing/glare-card"
-import { LiftGrid } from "@/components/listing/lift-grid"
+import { TiltCard } from "@/components/listing/tilt-card"
 
 const CATEGORIES = [
   {
@@ -74,13 +73,13 @@ export function CategoryCards() {
           </div>
         </div>
 
-        {/* 6 Minimal Category Cards — 1:1 squares, one row, 3D lift + cursor glare */}
-        <LiftGrid columns={6} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
+        {/* 6 Category Cards — 1:1 squares, one row, consistent tilt + glare */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5">
           {CATEGORIES.map((cat) => {
             const IconComponent = cat.icon
             return (
               <Link key={cat.id} href={cat.href} className="group block h-full">
-                <GlareCard className="h-full rounded-xl">
+                <TiltCard className="h-full rounded-xl" maxTilt={8}>
                   <Card className="group/card relative aspect-square overflow-hidden rounded-xl bg-[#111111] p-0 text-white shadow-md transition-shadow duration-200 hover:shadow-2xl">
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-200 group-hover/card:scale-110"
@@ -98,11 +97,11 @@ export function CategoryCards() {
                       <p className="text-xs font-semibold text-amber-400">{cat.price}</p>
                     </CardContent>
                   </Card>
-                </GlareCard>
+                </TiltCard>
               </Link>
             )
           })}
-        </LiftGrid>
+        </div>
 
       </div>
     </section>

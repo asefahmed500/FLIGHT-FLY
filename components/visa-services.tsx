@@ -10,7 +10,7 @@ import { useCatalog } from "@/lib/firestore-data"
 import { Reveal } from "@/components/motion/reveal"
 import { CardCta } from "@/components/listing/card-cta"
 import { DealChip } from "@/components/deal-chip"
-import { GlareCard } from "@/components/listing/glare-card"
+import { TiltCard } from "@/components/listing/tilt-card"
 
 interface VisaServicesProps {
   onBookItem: (item: BookingItemInfo) => void
@@ -45,8 +45,8 @@ export function VisaServices({ onBookItem }: VisaServicesProps) {
           <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-4">
             {services.map((visa, i) => (
             <Reveal key={visa.id} variant="scale" delay={i * 80} className="h-full">
-              <GlareCard className="h-full rounded-xl" glareColor="rgba(79, 70, 229, 0.2)">
-              <Card className="shine-sweep group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl">
+              <TiltCard className="h-full">
+              <Card className="group flex h-full flex-col justify-between overflow-hidden rounded-xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-xl">
                 <div className="relative h-44 overflow-hidden">
                   <img src={visa.image} alt={visa.title} className="img-zoom h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -80,7 +80,7 @@ export function VisaServices({ onBookItem }: VisaServicesProps) {
                   </div>
                 </CardContent>
               </Card>
-              </GlareCard>
+              </TiltCard>
             </Reveal>
           ))}
           </div>
